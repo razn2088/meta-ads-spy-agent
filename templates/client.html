@@ -27,11 +27,11 @@
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-save">שמור שינויים</button>
-                    <form method="POST" action="/client/{{ client.client_id }}/delete"
-                          onsubmit="return confirm('האם אתה בטוח שברצונך למחוק לקוח זה?')" style="display:inline">
-                        <button type="submit" class="btn btn-delete">מחק לקוח</button>
-                    </form>
                 </div>
+            </form>
+            <form method="POST" action="/client/{{ client.client_id }}/delete"
+                  onsubmit="return confirm('האם אתה בטוח שברצונך למחוק לקוח זה?')" style="margin-top: 0.5rem">
+                <button type="submit" class="btn btn-delete">מחק לקוח</button>
             </form>
         </section>
 

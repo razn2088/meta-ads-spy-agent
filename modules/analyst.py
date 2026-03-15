@@ -4,54 +4,50 @@ from config.settings import GEMINI_API_KEY, LLM_PROVIDER, OPENAI_API_KEY
 from modules.config_loader import AdDiff, Client
 from utils.logger import log
 
-SYSTEM_PROMPT = """You are a Senior Marketing Analyst specializing in competitive intelligence.
-You are looking at data from competitors' Meta ad accounts.
-Your goal is to give a C-Level summary to your client.
+SYSTEM_PROMPT = """You are a Senior Marketing Analyst. Write a SHORT competitive intelligence WhatsApp message for your client.
 
-Rules:
-- DO NOT list technical details (ID numbers, hashes).
-- DO focus on Strategy, Offers, Visual/Creative changes, and Targeting signals.
-- If there are new ads, analyze what messaging and offers the competitor is pushing.
-- If ads were removed, note what the competitor stopped promoting.
-- If nothing changed, confirm that no changes were detected and the competitor's strategy appears stable.
+STRICT FORMAT RULES:
+- Maximum 4 short paragraphs. No more.
+- Paragraph 1: One-line summary of what changed this week (e.g. "ג'נסיס launched 3 new ads focused on leasing deals")
+- Paragraph 2: Key takeaways — what is the competitor's strategy? What offers are they pushing? (2-3 bullet points max)
+- Paragraph 3: Actionable suggestions — what should the client do in response? (2-3 bullet points max)
+- Paragraph 4: Links to ads that require special attention. Use the format: https://www.facebook.com/ads/library/?id=LIBRARY_ID for each ad worth looking at. Add a short note next to each link explaining why it's important.
+
+RULES:
 - Write in Hebrew.
-- Tone: Professional, Insightful, Actionable.
-- Use bullet points for clarity.
-- Structure the report with a section per competitor."""
+- Keep it concise. This is a WhatsApp message, not a document.
+- NO technical details (hashes, internal IDs).
+- NO long introductions or conclusions.
+- If nothing changed, say so in one sentence and skip the rest.
+- Tone: Direct, professional, actionable."""
 
 
 def _build_user_prompt(client: Client, diffs: list[AdDiff]) -> str:
     sections = []
     for diff in diffs:
-        section = f"## מתחרה: {diff.competitor_name}\n"
-        section += f"מודעות חדשות: {len(diff.new_ads)}\n"
-        section += f"מודעות שהוסרו: {len(diff.removed_ads)}\n"
-        section += f"מודעות ללא שינוי: {len(diff.unchanged_ads)}\n\n"
+        section = f"מתחרה: {diff.competitor_name}\n"
+        section += f"חדשות: {len(diff.new_ads)} | הוסרו: {len(diff.removed_ads)} | ללא שינוי: {len(diff.unchanged_ads)}\n\n"
 
         if diff.new_ads:
-            section += "### מודעות חדשות:\n"
+            section += "מודעות חדשות:\n"
             for ad in diff.new_ads:
-                section += f"- טקסט: {ad.ad_text[:200]}\n"
-                section += f"  תאריך התחלה: {ad.start_date}\n"
-                section += f"  פלטפורמות: {', '.join(ad.platforms)}\n"
-                section += f"  סוג קריאייטיב: {ad.creative_type}\n"
-                section += f"  CTA: {ad.cta_text}\n\n"
+                section += f"- [{ad.start_date}] {ad.ad_text[:150]}\n"
+                section += f"  CTA: {ad.cta_text} | סוג: {ad.creative_type}\n"
+                # Include ad_id which is derived from library_id for link generation
+                section += f"  Library ID: {ad.ad_id}\n\n"
 
         if diff.removed_ads:
-            section += "### מודעות שהוסרו:\n"
+            section += "מודעות שהוסרו:\n"
             for ad in diff.removed_ads:
-                section += f"- טקסט: {ad.ad_text[:200]}\n"
-                section += f"  סוג קריאייטיב: {ad.creative_type}\n\n"
+                section += f"- {ad.ad_text[:100]}\n"
 
         sections.append(section)
 
-    full_prompt = (
+    return (
         f"לקוח: {client.client_name}\n\n"
-        f"להלן נתוני המתחרים מהסריקה השבועית:\n\n"
         + "\n---\n".join(sections)
-        + "\n\nאנא נתח את הנתונים וכתוב דו\"ח תובנות תחרותי."
+        + "\n\nכתוב דו\"ח קצר ב-4 פסקאות כמו שהוגדר."
     )
-    return full_prompt
 
 
 def _call_openai(system_prompt: str, user_prompt: str) -> str:
@@ -95,6 +91,5 @@ def generate_report(client: Client, diffs: list[AdDiff]) -> str:
     else:
         raise ValueError(f"Unknown LLM provider: {LLM_PROVIDER}")
 
-    # Add header
-    header = f"📊 דו\"ח מודיעין תחרותי שבועי - {client.client_name}\n{'=' * 40}\n\n"
+    header = f"📊 דו\"ח שבועי - {client.client_name}\n\n"
     return header + report

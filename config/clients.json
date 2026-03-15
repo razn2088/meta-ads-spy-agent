@@ -1,16 +1,12 @@
 [
   {
-    "client_id": "client_001",
-    "client_name": "פיצה עגבנייה",
-    "whatsapp_group_name": "פיצה עגבנייה - שיווק",
+    "client_id": "client_1773600277",
+    "client_name": "אלטו",
+    "whatsapp_group_name": "אלטו - מחקר מתחרים",
     "competitors": [
       {
-        "name": "דומינוס",
-        "url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=IL&view_all_page_id=106760969366723"
-      },
-      {
-        "name": "פיצה האט",
-        "url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=IL&view_all_page_id=123456789"
+        "name": "ג׳נסיס",
+        "url": "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=IL&is_targeted_country=false&media_type=all&search_type=page&sort_data[direction]=desc&sort_data[mode]=total_impressions&view_all_page_id=151182784897525"
       }
     ]
   }

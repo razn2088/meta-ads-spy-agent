@@ -68,8 +68,8 @@ JS_EXTRACT_ADS = """() => {
 
 
 def _generate_ad_id(competitor_name: str, library_id: str) -> str:
-    raw = f"{competitor_name}|{library_id}"
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
+    # Use the actual Library ID as the ad_id so we can generate links later
+    return library_id.strip()
 
 
 async def _scroll_to_load_all(page: Page) -> None:
