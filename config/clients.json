@@ -1,0 +1,17 @@
+[
+  {
+    "client_id": "client_001",
+    "client_name": "פיצה עגבנייה",
+    "whatsapp_group_name": "פיצה עגבנייה - שיווק",
+    "competitors": [
+      {
+        "name": "דומינוס",
+        "url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=IL&view_all_page_id=106760969366723"
+      },
+      {
+        "name": "פיצה האט",
+        "url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=IL&view_all_page_id=123456789"
+      }
+    ]
+  }
+]

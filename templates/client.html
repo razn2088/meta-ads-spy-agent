@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ client.client_name }} - Meta Ads Spy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-link">&larr; חזרה ללוח הבקרה</a>
+            <h1>{{ client.client_name }}</h1>
+        </header>
+
+        <!-- Client Details -->
+        <section class="card">
+            <h2>פרטי לקוח</h2>
+            <form method="POST" action="/client/{{ client.client_id }}/update" class="form-stack">
+                <div class="form-group">
+                    <label>שם הלקוח</label>
+                    <input type="text" name="client_name" value="{{ client.client_name }}" required>
+                </div>
+                <div class="form-group">
+                    <label>שם קבוצת וואטסאפ / מזהה</label>
+                    <input type="text" name="whatsapp_group_name" value="{{ client.whatsapp_group_name }}" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-save">שמור שינויים</button>
+                    <form method="POST" action="/client/{{ client.client_id }}/delete"
+                          onsubmit="return confirm('האם אתה בטוח שברצונך למחוק לקוח זה?')" style="display:inline">
+                        <button type="submit" class="btn btn-delete">מחק לקוח</button>
+                    </form>
+                </div>
+            </form>
+        </section>
+
+        <!-- Competitors -->
+        <section class="card">
+            <h2>מתחרים ({{ client.competitors|length }})</h2>
+
+            <!-- Add Competitor -->
+            <form method="POST" action="/client/{{ client.client_id }}/competitor/add" class="form-row competitor-form">
+                <input type="text" name="competitor_name" placeholder="שם המתחרה (לדוגמה: דומינוס)" required>
+                <input type="url" name="competitor_url" placeholder="קישור ל-Meta Ads Library" required>
+                <button type="submit" class="btn btn-add">הוסף</button>
+            </form>
+
+            {% if client.competitors %}
+                <div class="competitors-list">
+                    {% for comp in client.competitors %}
+                        <div class="competitor-row">
+                            <div class="competitor-info">
+                                <strong>{{ comp.name }}</strong>
+                                <a href="{{ comp.url }}" target="_blank" class="comp-url">{{ comp.url[:80] }}...</a>
+                            </div>
+                            <form method="POST" action="/client/{{ client.client_id }}/competitor/{{ loop.index0 }}/delete"
+                                  onsubmit="return confirm('להסיר את {{ comp.name }}?')">
+                                <button type="submit" class="btn btn-delete-sm">הסר</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">לא נוספו מתחרים עדיין.</p>
+            {% endif %}
+        </section>
+
+        <!-- Run History -->
+        <section class="card">
+            <h2>היסטוריית הרצות</h2>
+            {% if history %}
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>תאריך</th>
+                            <th>מתחרה</th>
+                            <th>מודעות שנמצאו</th>
+                            <th>סטטוס</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for run in history %}
+                            <tr>
+                                <td>{{ run.date }}</td>
+                                <td>{{ run.competitor }}</td>
+                                <td>{{ run.ads_found }}</td>
+                                <td>
+                                    <span class="badge {% if run.status == 'success' %}badge-success{% else %}badge-error{% endif %}">
+                                        {% if run.status == 'success' %}הצלחה{% else %}שגיאה{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="empty-state">אין הרצות עדיין. הפעל את הסוכן מלוח הבקרה כדי לראות היסטוריה.</p>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>

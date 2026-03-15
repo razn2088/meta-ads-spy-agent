@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Ads Spy - לוח בקרה</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Meta Ads Spy</h1>
+            <p class="subtitle">סוכן מחקר מתחרים</p>
+        </header>
+
+        <!-- Agent Status & Run -->
+        <section class="card agent-card">
+            <div class="card-header">
+                <h2>סטטוס סוכן</h2>
+                <form method="POST" action="/run-agent" style="margin:0">
+                    <button type="submit" class="btn btn-run" {% if agent_status.running %}disabled{% endif %}>
+                        {% if agent_status.running %}
+                            רץ כעת...
+                        {% else %}
+                            הפעל סוכן
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+            <div class="status-info">
+                {% if agent_status.running %}
+                    <span class="badge badge-running">פעיל</span>
+                {% elif agent_status.last_result and 'error' in agent_status.last_result %}
+                    <span class="badge badge-error">הרצה אחרונה: שגיאה</span>
+                {% elif agent_status.last_result == 'success' %}
+                    <span class="badge badge-success">הרצה אחרונה: הצלחה</span>
+                {% else %}
+                    <span class="badge badge-idle">טרם הופעל</span>
+                {% endif %}
+                {% if agent_status.last_run %}
+                    <span class="status-date">{{ agent_status.last_run }}</span>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Add New Client -->
+        <section class="card">
+            <h2>הוסף לקוח חדש</h2>
+            <form method="POST" action="/client/add" class="form-row">
+                <input type="text" name="client_name" placeholder="שם הלקוח" required>
+                <input type="text" name="whatsapp_group_name" placeholder="שם קבוצת וואטסאפ / מזהה" required>
+                <button type="submit" class="btn btn-add">הוסף לקוח</button>
+            </form>
+        </section>
+
+        <!-- Clients List -->
+        <section class="card">
+            <h2>לקוחות ({{ clients|length }})</h2>
+            {% if clients %}
+                <div class="clients-grid">
+                    {% for client in clients %}
+                        <div class="client-card">
+                            <div class="client-info">
+                                <h3>{{ client.client_name }}</h3>
+                                <span class="client-meta">
+                                    וואטסאפ: {{ client.whatsapp_group_name }}
+                                </span>
+                                <span class="client-meta">
+                                    מתחרים: {{ client.competitors|length }}
+                                </span>
+                            </div>
+                            <div class="client-actions">
+                                <a href="/client/{{ client.client_id }}" class="btn btn-edit">ניהול</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">אין לקוחות עדיין. הוסף לקוח למעלה כדי להתחיל.</p>
+            {% endif %}
+        </section>
+    </div>
+
+    <script>
+        // Auto-refresh status when agent is running
+        {% if agent_status.running %}
+        setInterval(async () => {
+            const res = await fetch('/api/status');
+            const data = await res.json();
+            if (!data.running) {
+                window.location.reload();
+            }
+        }, 5000);
+        {% endif %}
+    </script>
+</body>
+</html>
