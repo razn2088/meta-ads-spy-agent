@@ -18,12 +18,12 @@ html,body{width:1080px;height:1920px;background:transparent;overflow:hidden;font
 body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 #stage{position:relative;width:1080px;height:1920px;overflow:hidden}
 .el{position:absolute;opacity:0;will-change:transform,opacity}
-#shade{position:absolute;left:0;right:0;top:880px;height:1040px;background:linear-gradient(180deg,rgba(3,10,28,0) 0%,rgba(3,10,28,.55) 28%,rgba(3,10,28,.8) 100%);opacity:0}
-#shadeTop{position:absolute;left:0;right:0;top:0;height:560px;background:linear-gradient(0deg,rgba(3,10,28,0) 0%,rgba(3,10,28,.45) 60%,rgba(3,10,28,.6) 100%);opacity:0}
+#shade{position:absolute;left:0;right:0;top:1200px;height:720px;background:linear-gradient(180deg,rgba(3,10,28,0) 0%,rgba(3,10,28,.55) 28%,rgba(3,10,28,.8) 100%);opacity:0}
+#shadeTop{position:absolute;left:0;right:0;top:0;height:380px;background:linear-gradient(0deg,rgba(3,10,28,0) 0%,rgba(3,10,28,.45) 60%,rgba(3,10,28,.6) 100%);opacity:0}
 
 /* captions (top band) */
-.cap{left:60px;right:60px;top:268px;display:flex;justify-content:center}
-.cap>div{background:rgba(6,20,51,.86);border:2px solid rgba(141,176,255,.35);border-radius:28px;padding:18px 34px 22px;font-size:58px;font-weight:900;line-height:1.12;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.35);max-width:960px}
+.cap{left:60px;right:60px;top:110px;display:flex;justify-content:center}
+.cap>div{background:rgba(6,20,51,.86);border:2px solid rgba(141,176,255,.35);border-radius:28px;padding:18px 34px 22px;font-size:54px;font-weight:900;line-height:1.12;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.35);max-width:960px}
 .cap b{color:var(--b300);font-weight:900}
 .cap.white>div{background:#fff;color:var(--ink);border-color:#fff}
 .cap.white b{color:var(--b500)}
@@ -32,7 +32,7 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 .kick{display:block;font-size:30px;font-weight:700;color:var(--b300);margin-bottom:4px;letter-spacing:.02em}
 
 /* glass card */
-.card{left:60px;width:960px;top:1010px;background:rgba(255,255,255,.97);color:var(--ink);border-radius:34px;box-shadow:0 40px 90px rgba(0,0,0,.45),0 0 0 2px rgba(255,255,255,.4);overflow:hidden}
+.card{left:60px;width:960px;top:1230px;background:rgba(255,255,255,.97);color:var(--ink);border-radius:34px;box-shadow:0 40px 90px rgba(0,0,0,.45),0 0 0 2px rgba(255,255,255,.4);overflow:hidden}
 .card .hd{display:flex;align-items:center;gap:16px;padding:22px 28px;border-bottom:1.5px solid #E7EDF7}
 .logo{width:54px;height:54px;border-radius:15px;background:var(--n800);display:flex;align-items:center;justify-content:center;flex:none}
 .logo svg{width:36px;height:36px;color:#fff}
@@ -51,7 +51,7 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 .spark svg{width:904px;height:120px;overflow:visible}
 
 /* hub */
-.hub{left:60px;width:960px;top:1020px;height:520px}
+.hub{left:60px;width:960px;top:1230px;height:520px}
 .node{position:absolute;left:380px;top:300px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4F86FF,#1F4FD6);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 14px rgba(46,107,255,.18),0 30px 70px rgba(31,79,214,.6);font-weight:900;font-size:34px;direction:ltr}
 .node svg{width:62px;height:62px;stroke:#fff;fill:none;stroke-width:2;margin-bottom:4px}
 .src{position:absolute;top:0;width:280px;height:130px;border-radius:26px;background:#fff;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;font-weight:900;box-shadow:0 20px 50px rgba(0,0,0,.35)}
@@ -81,7 +81,7 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 .chip.blue{background:var(--b500);color:#fff}
 
 /* whatsapp phone */
-.phone{left:250px;width:580px;top:1000px;height:1000px;border-radius:72px;background:#020817;padding:18px;box-shadow:0 50px 110px rgba(0,0,0,.6),0 0 0 2px rgba(141,176,255,.25)}
+.phone{left:250px;width:580px;top:1230px;height:1000px;border-radius:72px;background:#020817;padding:18px;box-shadow:0 50px 110px rgba(0,0,0,.6),0 0 0 2px rgba(141,176,255,.25)}
 .scr{width:100%;height:100%;border-radius:56px;overflow:hidden;background:#EFE7DD;color:#111}
 .wa-h{height:150px;background:#0B5C4E;display:flex;align-items:flex-end;gap:16px;padding:0 26px 22px;color:#fff}
 .wa-h .gav{width:64px;height:64px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
@@ -116,7 +116,7 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 .notif .tx span{display:block;font-size:25px;color:#33415C;margin-top:4px}
 
 /* outro */
-.outro{left:60px;right:60px;top:1060px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.outro{left:60px;right:60px;top:1240px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .lock{display:flex;align-items:center;gap:26px;direction:ltr}
 .lock svg{width:120px;height:120px;color:#fff}
 .lock b{font-size:130px;font-weight:900;letter-spacing:.06em;line-height:1}
@@ -193,7 +193,7 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 <!-- ── S6 · not a gimmick, real value (50.8–62.1) ── -->
 <div class="el cap" data-in="51.66" data-out="58.2" data-fx="pop"><div>לא עוד ״וואו״<br><b>לשיחת מכירה</b></div></div>
 <div class="el cap blue" data-in="58.26" data-out="62.1" data-fx="pop"><div>מה מביא <b>ערך אמיתי?</b></div></div>
-<div class="el card" data-in="59.22" data-out="62.1" data-fx="up" style="top:1060px">
+<div class="el card" data-in="59.22" data-out="62.1" data-fx="up" style="top:1260px">
   <div class="list">
     <div class="row el" data-in="59.64" data-out="62.1" data-fx="pop" style="position:relative"><div class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>ערך ללקוחות שלנו</div>
     <div class="row el" data-in="61.3" data-out="62.1" data-fx="pop" style="position:relative"><div class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>ערך לנו כסוכנות</div>
@@ -248,7 +248,7 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 const DUR = 87.16;
 window.STAGE = { w: 1080, h: 1920 };
 const Q = new URLSearchParams(location.search);
-if (Q.has('preview')) { document.body.classList.add('preview'); document.addEventListener('DOMContentLoaded', () => { const f = document.createElement('div'); f.style.cssText = 'position:absolute;left:396px;top:470px;width:496px;height:496px;border-radius:50%;background:rgba(255,200,160,.55);outline:4px dashed #fff'; document.getElementById('stage').prepend(f); }); }
+if (Q.has('preview')) { document.body.classList.add('preview'); document.addEventListener('DOMContentLoaded', () => { const f = document.createElement('div'); f.style.cssText = 'position:absolute;left:170px;top:350px;width:560px;height:640px;border-radius:45%;background:rgba(255,200,160,.55);outline:4px dashed #fff'; document.getElementById('stage').prepend(f); }); }
 const $ = s => document.querySelector(s);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const prog = (t, a, b) => clamp((t - a) / (b - a));
@@ -396,7 +396,7 @@ function s7(t) {
 }
 
 /* notifications stack: the second one slides in under the first */
-function s8() { $('#n1').style.top = '1030px'; $('#n2').style.top = '1250px'; }
+function s8() { $('#n1').style.top = '1230px'; $('#n2').style.top = '1450px'; }
 
 function renderAt(t) {
   t = clamp(t, 0, DUR - 1e-3);

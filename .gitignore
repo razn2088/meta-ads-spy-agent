@@ -10,3 +10,5 @@ video/node_modules/
 video/out/music.wav
 video/out/vo/
 video/out/music-ad.wav
+video/src/
+video/out/.reel-frames/
