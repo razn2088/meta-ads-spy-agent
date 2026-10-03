@@ -12,14 +12,14 @@
   Speaker's face sits at ~x 396–892, y 470–966, so graphics live in two bands:
   TOP (y 250–440) for captions and LOWER (y 1000–1560) for dashboard UI.
 */
-:root{--n950:#030A1C;--n900:#061433;--n800:#0A1E4A;--n700:#123070;--b500:#2E6BFF;--b400:#4F86FF;--b300:#8DB0FF;--b100:#DCE7FF;--ink:#0A1E4A;--muted:#5C6F93;--line:#D5DFF0;--ok:#16B26B;--warn:#FF9F1A;--bad:#F2545B}
+:root{--n950:#0E0B26;--n900:#0E0B26;--n800:#282C51;--n700:#3A3F6E;--b500:#282C51;--b400:#3A3F6E;--b300:#FAED64;--b100:#F7F7F7;--or:#F28D35;--ye:#FAED64;--grad:linear-gradient(135deg,#FAED64 0%,#F28D35 100%);--ink:#0E0B26;--muted:#5C6F93;--line:#D5DFF0;--ok:#16B26B;--warn:#FF9F1A;--bad:#F2545B}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:1080px;height:1920px;background:transparent;overflow:hidden;font-family:'Heebo',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
 body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 #stage{position:relative;width:1080px;height:1920px;overflow:hidden}
 .el{position:absolute;opacity:0;will-change:transform,opacity}
-#shade{position:absolute;left:0;right:0;top:1200px;height:720px;background:linear-gradient(180deg,rgba(3,10,28,0) 0%,rgba(3,10,28,.55) 28%,rgba(3,10,28,.8) 100%);opacity:0}
-#shadeTop{position:absolute;left:0;right:0;top:0;height:380px;background:linear-gradient(0deg,rgba(3,10,28,0) 0%,rgba(3,10,28,.45) 60%,rgba(3,10,28,.6) 100%);opacity:0}
+#shade{position:absolute;left:0;right:0;top:1200px;height:720px;background:linear-gradient(180deg,rgba(14,11,38,0) 0%,rgba(14,11,38,.55) 28%,rgba(14,11,38,.8) 100%);opacity:0}
+#shadeTop{position:absolute;left:0;right:0;top:0;height:380px;background:linear-gradient(0deg,rgba(14,11,38,0) 0%,rgba(14,11,38,.45) 60%,rgba(14,11,38,.6) 100%);opacity:0}
 
 /* captions (top band) */
 .cap{left:60px;right:60px;top:110px;display:flex;justify-content:center}
@@ -34,8 +34,11 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 /* glass card */
 .card{left:60px;width:960px;top:1230px;background:rgba(255,255,255,.97);color:var(--ink);border-radius:34px;box-shadow:0 40px 90px rgba(0,0,0,.45),0 0 0 2px rgba(255,255,255,.4);overflow:hidden}
 .card .hd{display:flex;align-items:center;gap:16px;padding:22px 28px;border-bottom:1.5px solid #E7EDF7}
-.logo{width:54px;height:54px;border-radius:15px;background:var(--n800);display:flex;align-items:center;justify-content:center;flex:none}
+.logo{height:54px;min-width:54px;padding:0 14px;border-radius:15px;background:var(--n800);display:flex;align-items:center;justify-content:center;flex:none}
+.logo img{height:25px;display:block}
 .logo svg{width:36px;height:36px;color:#fff}
+.logo.ai{background:var(--grad);padding:0}
+.logo.ai svg{width:32px;height:32px;color:var(--ink)}
 .hd b{font-size:28px;font-weight:800;display:block;line-height:1.1}
 .hd small{font-size:20px;color:var(--muted)}
 .live{margin-inline-start:auto;display:flex;align-items:center;gap:8px;font-size:20px;font-weight:700;color:var(--ok)}
@@ -52,12 +55,12 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 
 /* hub */
 .hub{left:60px;width:960px;top:1230px;height:520px}
-.node{position:absolute;left:380px;top:300px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4F86FF,#1F4FD6);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 14px rgba(46,107,255,.18),0 30px 70px rgba(31,79,214,.6);font-weight:900;font-size:34px;direction:ltr}
-.node svg{width:62px;height:62px;stroke:#fff;fill:none;stroke-width:2;margin-bottom:4px}
+.node{position:absolute;left:380px;top:300px;width:200px;height:200px;border-radius:50%;background:var(--grad);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 14px rgba(242,141,53,.22),0 30px 70px rgba(242,141,53,.45);font-weight:900;font-size:34px;direction:ltr}
+.node svg{width:62px;height:62px;color:var(--ink);margin-bottom:4px}
 .src{position:absolute;top:0;width:280px;height:130px;border-radius:26px;background:#fff;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;font-weight:900;box-shadow:0 20px 50px rgba(0,0,0,.35)}
 .src small{font-size:20px;color:var(--muted);font-weight:600;direction:ltr}
 .hub svg.wires{position:absolute;inset:0;width:960px;height:520px;overflow:visible}
-.hub svg.wires path{fill:none;stroke:#8DB0FF;stroke-width:5;stroke-linecap:round;stroke-dasharray:10 12}
+.hub svg.wires path{fill:none;stroke:#F28D35;stroke-width:5;stroke-linecap:round;stroke-dasharray:10 12}
 
 /* chat */
 .chat{height:560px}
@@ -65,15 +68,15 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 .msg{position:absolute;max-width:640px;padding:16px 24px;border-radius:26px;font-size:28px;font-weight:600;line-height:1.35}
 .msg.me{left:24px;background:var(--b500);color:#fff;border-bottom-left-radius:8px}
 .msg.ai{right:24px;background:#fff;color:var(--ink);border:1.5px solid #E2E9F5;border-bottom-right-radius:8px;box-shadow:0 6px 16px rgba(10,30,74,.06)}
-.msg.ai b{color:var(--b500)}
+.msg.ai b{color:var(--ink);font-weight:800;background:linear-gradient(transparent 58%,rgba(250,237,100,.85) 58%)}
 .dots{display:flex;gap:8px;padding:6px 4px}
 .dots i{width:12px;height:12px;border-radius:50%;background:#9AA8C2;display:block}
 .inbar{display:flex;align-items:center;gap:14px;padding:18px 24px;border-top:1.5px solid #E7EDF7;background:#fff}
 .inbar .in{flex:1;height:62px;border-radius:31px;background:#F1F4FA;display:flex;align-items:center;padding:0 26px;font-size:26px;color:#8A99B8;white-space:nowrap;overflow:hidden}
 .inbar .in.typing{color:var(--ink)}
-.inbar .send{width:62px;height:62px;border-radius:50%;background:var(--b500);display:flex;align-items:center;justify-content:center;flex:none}
-.inbar .send svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.caret{display:inline-block;width:3px;height:30px;background:var(--b500);vertical-align:middle;margin-inline-start:2px}
+.inbar .send{width:62px;height:62px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;flex:none}
+.inbar .send svg{width:30px;height:30px;stroke:var(--ink);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.caret{display:inline-block;width:3px;height:30px;background:var(--or);vertical-align:middle;margin-inline-start:2px}
 
 /* chips */
 .chips{left:60px;right:60px;top:1080px;display:flex;flex-direction:column;align-items:center;gap:22px}
@@ -85,14 +88,14 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 .scr{width:100%;height:100%;border-radius:56px;overflow:hidden;background:#EFE7DD;color:#111}
 .wa-h{height:150px;background:#0B5C4E;display:flex;align-items:flex-end;gap:16px;padding:0 26px 22px;color:#fff}
 .wa-h .gav{width:64px;height:64px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
-.wa-h .gav svg{width:42px;height:42px;color:var(--ink)}
+.wa-h .gav img{width:48px;display:block}
 .wa-h b{display:block;font-size:26px;font-weight:700}
 .wa-h small{font-size:19px;opacity:.85}
 .wa-b{position:relative;padding:22px 20px}
 .wa-m{position:absolute;max-width:440px;padding:14px 20px 10px;border-radius:18px;font-size:25px;line-height:1.35;box-shadow:0 2px 3px rgba(0,0,0,.1)}
 .wa-m.me{left:20px;background:#D9FDD3}
 .wa-m.bot{right:20px;background:#fff}
-.wa-m .who{display:block;font-size:20px;font-weight:800;color:#1F4FD6;margin-bottom:2px;direction:ltr;text-align:right}
+.wa-m .who{display:block;font-size:20px;font-weight:800;color:#D9731C;margin-bottom:2px;direction:ltr;text-align:right}
 .wa-m .tm{display:block;text-align:left;font-size:16px;color:#667781;margin-top:2px}
 
 /* checklist / monitor / rules / notifications */
@@ -117,13 +120,13 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 
 /* outro */
 .outro{left:60px;right:60px;top:1240px;display:flex;flex-direction:column;align-items:center;text-align:center}
-.lock{display:flex;align-items:center;gap:26px;direction:ltr}
-.lock svg{width:120px;height:120px;color:#fff}
-.lock b{font-size:130px;font-weight:900;letter-spacing:.06em;line-height:1}
+.lock{display:flex;align-items:flex-end;justify-content:center;gap:34px;direction:ltr}
+.lock img{width:520px;display:block}
+.lock svg.arrow{width:110px;height:300px;flex:none;overflow:visible}
 .outro h2{font-size:64px;font-weight:900;margin-top:30px}
-.outro h2 b{color:var(--b300)}
+.outro h2 b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .ints{display:flex;gap:14px;margin-top:28px;flex-wrap:wrap;justify-content:center}
-.ints span{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.3);border-radius:999px;padding:10px 22px;font-size:26px;font-weight:800;direction:ltr}
+.ints span{background:rgba(247,247,247,.1);border:2px solid rgba(242,141,53,.55);border-radius:999px;padding:10px 22px;font-size:26px;font-weight:800;direction:ltr}
 </style>
 </head>
 <body>
@@ -132,25 +135,22 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
   <symbol id="spark" viewBox="0 0 24 24"><path d="M12 2.5l2.2 5.6 5.8 2.2-5.8 2.2L12 18l-2.2-5.5L4 10.3l5.8-2.2z" fill="currentColor"/></symbol>
 </defs></svg>
 <div id="stage">
-<div id="shade"></div><div id="shadeTop"></div>
+<div id="shade"></div>
 
 <!-- ── S0 · internal dashboard (0–8.9) ── -->
-<div class="el cap" data-in="1.16" data-out="5.2" data-fx="pop"><div><span class="kick">פיתחנו אצלנו</span>דשבורד <b>AI</b> פנימי</div></div>
-<div class="el cap white" data-in="5.28" data-out="8.85" data-fx="pop"><div>ערך בכל מקום <b>שאפשר</b></div></div>
 <div class="el card" id="kpiCard" data-in="1.7" data-out="8.85" data-fx="up">
-  <div class="hd"><div class="logo"><svg><use href="#mark"/></svg></div><div><b>Alto Dashboard</b><small>סקירה שבועית · כל הערוצים</small></div><div class="live"><i></i>LIVE</div></div>
+  <div class="hd"><div class="logo"><img src="assets/alto-logo-06.png" alt="alto"></div><div><b>Alto Dashboard</b><small>סקירה שבועית · כל הערוצים</small></div><div class="live"><i></i>LIVE</div></div>
   <div class="kpis">
     <div class="kpi"><small>לידים השבוע</small><b data-count="128">0</b><em>▲ 18%</em></div>
     <div class="kpi"><small>עלות לליד</small><b data-count="42" data-pre="₪">0</b><em>▼ 11%</em></div>
     <div class="kpi"><small>ROAS</small><b data-count="4.3" data-dec="1" data-post="x">0</b><em>▲ 0.6</em></div>
   </div>
-  <div class="spark"><svg viewBox="0 0 904 120"><defs><linearGradient id="g1" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2E6BFF" stop-opacity=".25"/><stop offset="1" stop-color="#2E6BFF" stop-opacity="0"/></linearGradient></defs>
+  <div class="spark"><svg viewBox="0 0 904 120"><defs><linearGradient id="g1" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#F28D35" stop-opacity=".3"/><stop offset="1" stop-color="#FAED64" stop-opacity="0"/></linearGradient></defs>
     <path id="sparkFill" d="M0 100 L90 92 L180 96 L270 78 L360 82 L450 60 L540 66 L630 44 L720 40 L810 22 L904 10 L904 120 L0 120 Z" fill="url(#g1)"/>
-    <path id="sparkLine" d="M0 100 L90 92 L180 96 L270 78 L360 82 L450 60 L540 66 L630 44 L720 40 L810 22 L904 10" fill="none" stroke="#2E6BFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <path id="sparkLine" d="M0 100 L90 92 L180 96 L270 78 L360 82 L450 60 L540 66 L630 44 L720 40 L810 22 L904 10" fill="none" stroke="#F28D35" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 </div>
 
 <!-- ── S1 · connected AI chat (9–19) ── -->
-<div class="el cap" data-in="9.0" data-out="13.5" data-fx="pop"><div><span class="kick">פיצ׳ר לדוגמה</span>מחובר לכל <b>הנתונים</b></div></div>
 <div class="el hub" id="hub" data-in="10.4" data-out="13.55" data-fx="fade">
   <svg class="wires" viewBox="0 0 960 520"><path id="w1" d="M820 130 C 820 260, 600 300, 560 360"/><path id="w2" d="M480 130 L480 300"/><path id="w3" d="M140 130 C 140 260, 360 300, 400 360"/></svg>
   <div class="src" id="src1" style="right:0">מתחרים<small>Ads Library</small></div>
@@ -158,41 +158,30 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
   <div class="src" id="src3" style="left:0">פלטפורמות<small>CRM · Analytics</small></div>
   <div class="node" id="node"><svg viewBox="0 0 24 24"><use href="#spark"/></svg>Alto AI</div>
 </div>
-<div class="el cap blue" data-in="14.24" data-out="19.0" data-fx="pop"><div>צ׳אט <b>AI</b> לכל לקוח</div></div>
 <div class="el card chat" id="chat" data-in="13.64" data-out="35.3" data-fx="up">
-  <div class="hd"><div class="logo" style="background:var(--b500)"><svg style="width:32px;height:32px"><use href="#spark"/></svg></div><div><b>Alto AI</b><small>מכיר את כל השיווק של העסק</small></div><div class="live"><i></i>זמין 24/7</div></div>
+  <div class="hd"><div class="logo ai"><svg><use href="#spark"/></svg></div><div><b>Alto AI</b><small>מכיר את כל השיווק של העסק</small></div><div class="live"><i></i>זמין 24/7</div></div>
   <div class="area" id="chatArea"></div>
   <div class="inbar"><div class="in" id="chatIn">שאלו כל דבר על השיווק שלכם…</div><div class="send"><svg viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6"/></svg></div></div>
 </div>
 
 <!-- ── S2/S3 · questions & self-serve (19–35) ── -->
-<div class="el cap white" data-in="19.14" data-out="26.5" data-fx="pop"><div>שואלים <b>כל דבר</b></div></div>
-<div class="el cap blue" data-in="26.6" data-out="29.2" data-fx="pop"><div>תשובה <b>תוך שניות</b></div></div>
-<div class="el cap" data-in="29.28" data-out="32.4" data-fx="pop"><div>בלי לחכות<br><b>למנהל הקמפיינים</b></div></div>
-<div class="el cap white" data-in="32.46" data-out="35.3" data-fx="pop"><div>נכנסים · שואלים · <b>מקבלים</b></div></div>
 
 <!-- ── S4 · WhatsApp (35.4–44.2) ── -->
-<div class="el cap" data-in="35.5" data-out="37.85" data-fx="pop"><div>אפילו <b>בלי להיכנס</b></div></div>
-<div class="el cap blue" data-in="37.9" data-out="44.2" data-fx="pop"><div><span class="kick" style="color:#fff">אותו מוח שמכיר את כל השיווק</span>גם בקבוצת <b>הוואטסאפ</b></div></div>
 <div class="el phone" id="phone" data-in="36.42" data-out="44.2" data-fx="rise">
   <div class="scr">
-    <div class="wa-h"><div class="gav"><svg><use href="#mark"/></svg></div><div><b>שיווק · העסק שלך × Alto</b><small>את/ה, Alto AI, צוות Alto</small></div></div>
+    <div class="wa-h"><div class="gav"><img src="assets/alto-logo-07.png" alt="alto"></div><div><b>שיווק · העסק שלך × Alto</b><small>את/ה, Alto AI, צוות Alto</small></div></div>
     <div class="wa-b" id="waBody"></div>
   </div>
 </div>
 
 <!-- ── S5 · dashboard + always evolving (44.2–50.6) ── -->
-<div class="el cap white" data-in="46.46" data-out="48.6" data-fx="pop"><div>או ישר <b>מהדשבורד</b></div></div>
-<div class="el cap blue" data-in="48.68" data-out="50.7" data-fx="pop"><div>🚀 מתפתח <b>כל הזמן</b></div></div>
 <div class="el card chat" id="chat2" data-in="46.46" data-out="50.7" data-fx="up">
-  <div class="hd"><div class="logo" style="background:var(--b500)"><svg style="width:32px;height:32px"><use href="#spark"/></svg></div><div><b>Alto AI</b><small>מכיר את כל השיווק של העסק</small></div><div class="live"><i></i>זמין 24/7</div></div>
+  <div class="hd"><div class="logo ai"><svg><use href="#spark"/></svg></div><div><b>Alto AI</b><small>מכיר את כל השיווק של העסק</small></div><div class="live"><i></i>זמין 24/7</div></div>
   <div class="area" id="chatArea2"></div>
   <div class="inbar"><div class="in" id="chatIn2">שאלו כל דבר על השיווק שלכם…</div><div class="send"><svg viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6"/></svg></div></div>
 </div>
 
 <!-- ── S6 · not a gimmick, real value (50.8–62.1) ── -->
-<div class="el cap" data-in="51.66" data-out="58.2" data-fx="pop"><div>לא עוד ״וואו״<br><b>לשיחת מכירה</b></div></div>
-<div class="el cap blue" data-in="58.26" data-out="62.1" data-fx="pop"><div>מה מביא <b>ערך אמיתי?</b></div></div>
 <div class="el card" data-in="59.22" data-out="62.1" data-fx="up" style="top:1260px">
   <div class="list">
     <div class="row el" data-in="59.64" data-out="62.1" data-fx="pop" style="position:relative"><div class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>ערך ללקוחות שלנו</div>
@@ -201,14 +190,12 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 </div>
 
 <!-- ── S7 · watches the account 24/7 (62.2–71.7) ── -->
-<div class="el cap" data-in="62.2" data-out="67.1" data-fx="pop"><div>יושב על החשבון <b>24/7</b></div></div>
-<div class="el cap white" data-in="67.18" data-out="71.75" data-fx="pop"><div>🌙 גם כשאנחנו <b>ישנים</b></div></div>
 <div class="el card" id="mon" data-in="63.14" data-out="71.75" data-fx="up">
-  <div class="hd"><div class="logo"><svg><use href="#mark"/></svg></div><div><b>ניטור קמפיינים</b><small>Alto AI · בזמן אמת</small></div><div class="live"><i></i>LIVE</div></div>
+  <div class="hd"><div class="logo"><img src="assets/alto-logo-06.png" alt="alto"></div><div><b>ניטור קמפיינים</b><small>Alto AI · בזמן אמת</small></div><div class="live"><i></i>LIVE</div></div>
   <div class="chart"><div class="night el" id="night" data-in="67.4" data-out="71.75" data-fx="pop">🌙 03:12</div>
     <svg viewBox="0 0 904 170"><path d="M0 150 L904 150" stroke="#E3E9F4" stroke-width="2"/><path d="M0 100 L904 100" stroke="#EEF2F8" stroke-width="2"/><path d="M0 50 L904 50" stroke="#EEF2F8" stroke-width="2"/>
-      <path id="monLine" d="M0 120 L75 110 L150 116 L225 96 L300 102 L375 80 L450 86 L525 64 L600 70 L675 52 L750 58 L825 40 L904 34" fill="none" stroke="#2E6BFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle id="monDot" r="11" fill="#2E6BFF" stroke="#fff" stroke-width="4"/></svg></div>
+      <path id="monLine" d="M0 120 L75 110 L150 116 L225 96 L300 102 L375 80 L450 86 L525 64 L600 70 L675 52 L750 58 L825 40 L904 34" fill="none" stroke="#F28D35" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle id="monDot" r="11" fill="#F28D35" stroke="#fff" stroke-width="4"/></svg></div>
   <div class="reco">
     <div class="el" data-in="64.76" data-out="71.75" data-fx="end" style="position:relative">💡 המלצה: להעלות תקציב ב־15% לקמפיין הלידים</div>
     <div class="el" data-in="65.62" data-out="71.75" data-fx="end" style="position:relative">💡 המלצה: לבדוק קהל Lookalike חדש</div>
@@ -216,10 +203,8 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 </div>
 
 <!-- ── S8 · rules & alerts (71.8–82.5) ── -->
-<div class="el cap" data-in="71.8" data-out="77.4" data-fx="pop"><div>💰 במיוחד <b>בתקציבים גבוהים</b></div></div>
-<div class="el cap blue" data-in="77.46" data-out="82.55" data-fx="pop"><div>⚡ מתריע <b>לבד</b></div></div>
 <div class="el card" id="rules" data-in="74.68" data-out="78.6" data-fx="up">
-  <div class="hd"><div class="logo"><svg><use href="#mark"/></svg></div><div><b>החוקים שהגדרנו</b><small>Alto AI בודק אותם כל הזמן</small></div></div>
+  <div class="hd"><div class="logo"><img src="assets/alto-logo-06.png" alt="alto"></div><div><b>החוקים שהגדרנו</b><small>Alto AI בודק אותם כל הזמן</small></div></div>
   <div class="rules">
     <span class="rule el" data-in="75.34" data-out="78.6" data-fx="pop" style="position:relative">CTR מתחת ל־1%</span>
     <span class="rule el" data-in="76.0" data-out="78.6" data-fx="pop" style="position:relative">עלות לליד מעל ₪60</span>
@@ -236,9 +221,8 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 </div>
 
 <!-- ── S9 · outro (82.6–87.16) ── -->
-<div class="el cap" data-in="82.76" data-out="87.2" data-fx="pop"><div>הרבה דברים <b>שאנחנו מחברים</b></div></div>
 <div class="el outro" data-in="83.4" data-out="87.2" data-fx="up">
-  <div class="lock"><svg><use href="#mark"/></svg><b>ALTO</b></div>
+  <div class="lock"><svg class="arrow" viewBox="0 0 110 300"><defs><linearGradient id="ga" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#FAED64"/><stop offset="1" stop-color="#F28D35"/></linearGradient></defs><path id="arrowPath" d="M55 296 L55 14 M10 62 L55 14 L100 62" fill="none" stroke="url(#ga)" stroke-width="22" stroke-linecap="butt" stroke-linejoin="miter"/></svg><img src="assets/alto-logo-17.png" alt="alto – למותגים שמכוונים גבוה"></div>
   <h2 class="el" data-in="84.82" data-out="87.2" data-fx="pop" style="position:relative">הכול כדי <b>לייצר ערך.</b></h2>
   <div class="ints"><span>Meta</span><span>Google</span><span>TikTok</span><span>WhatsApp</span><span>CRM</span></div>
 </div>
@@ -283,8 +267,6 @@ LOWER.push(...[...document.querySelectorAll('.card')]);
 function shade() {
   const v = Math.max(...LOWER.map(n => +n.style.opacity || 0));
   $('#shade').style.opacity = clamp(v * 1.2);
-  const c = Math.max(...[...document.querySelectorAll('.cap')].map(n => +n.style.opacity || 0));
-  $('#shadeTop').style.opacity = c * .9;
 }
 
 /* KPI count-ups + sparkline */
@@ -398,9 +380,12 @@ function s7(t) {
 /* notifications stack: the second one slides in under the first */
 function s8() { $('#n1').style.top = '1230px'; $('#n2').style.top = '1450px'; }
 
+const ARROW_LEN = 400;
+$('#arrowPath').style.strokeDasharray = ARROW_LEN;
+function s9(t) { $('#arrowPath').style.strokeDashoffset = ARROW_LEN * (1 - E.inOut(prog(t, 83.7, 84.6))); }
 function renderAt(t) {
   t = clamp(t, 0, DUR - 1e-3);
-  anim(t); s0(t); s1(t); chat1(t); chat2(t); s4(t); s7(t); s8(t);
+  anim(t); s9(t); s0(t); s1(t); chat1(t); chat2(t); s4(t); s7(t); s8(t);
   typeInto($('#chatIn'), 'שאלו כל דבר על השיווק שלכם', t, 16.3, 18.4, 'שאלו כל דבר על השיווק שלכם…');
   typeInto($('#chatIn2'), 'מה כדאי לשפר השבוע?', t, 46.6, 46.95, 'שאלו כל דבר על השיווק שלכם…');
   shade();
