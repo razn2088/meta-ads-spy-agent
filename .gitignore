@@ -7,3 +7,4 @@ __pycache__/
 video/out/.part*
 video/out/still-*
 video/node_modules/
+video/out/music.wav
