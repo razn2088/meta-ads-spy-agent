@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alto Dashboard Explainer</title>
+<link rel="stylesheet" href="fonts/heebo.css">
+<style>
+:root{
+  --n950:#030A1C; --n900:#061433; --n800:#0A1E4A; --n700:#123070; --n600:#1B3F8C;
+  --b500:#2E6BFF; --b400:#4F86FF; --b300:#8DB0FF; --b100:#DCE7FF;
+  --w:#FFFFFF; --mist:#EEF3FC; --line:#D5DFF0; --ink:#0A1E4A; --muted:#5C6F93;
+  --ok:#22C77A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:var(--n950);overflow:hidden}
+body{font-family:'Heebo',system-ui,sans-serif;color:var(--w);-webkit-font-smoothing:antialiased}
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;flex:none;transform-origin:center;background:var(--n900)}
+.scene{position:absolute;inset:0;display:none;overflow:hidden}
+.scene-bg{position:absolute;inset:0}
+.navy .scene-bg{background:radial-gradient(1200px 800px at 75% 20%, #0F2A66 0%, rgba(15,42,102,0) 60%),linear-gradient(160deg,var(--n800) 0%,var(--n900) 55%,var(--n950) 100%)}
+.navy .scene-bg::after{content:"";position:absolute;inset:-40px;background-image:radial-gradient(rgba(141,176,255,.16) 1.4px, transparent 1.6px);background-size:40px 40px;transform:translate(var(--gx,0),var(--gy,0))}
+.white .scene-bg{background:linear-gradient(180deg,#FFFFFF 0%,#F3F6FC 100%)}
+.white{color:var(--ink)}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55}
+.orb.a{width:620px;height:620px;background:#1F56E0}
+.orb.b{width:520px;height:520px;background:#0E3CA8;opacity:.6}
+.wipe-edge{position:absolute;top:0;bottom:0;width:18px;background:linear-gradient(180deg,var(--b400),var(--b500));box-shadow:0 0 40px 6px rgba(46,107,255,.6);display:none;z-index:50}
+.content{position:absolute;inset:0}
+.mask{overflow:hidden;display:block;padding-bottom:.08em}
+.mask>span{display:inline-block}
+.kicker{display:inline-flex;align-items:center;gap:12px;white-space:nowrap;font-size:26px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--b300)}
+.white .kicker{color:var(--b500)}
+.kicker::before{content:"";width:34px;height:4px;border-radius:2px;background:currentColor}
+html[lang=he] .kicker{letter-spacing:.02em}
+.accent{color:var(--b400)}
+.white .accent{color:var(--b500)}
+
+/* watermark */
+.wm{position:absolute;top:48px;left:64px;display:flex;align-items:center;gap:14px;z-index:20;direction:ltr}
+.wm svg{width:44px;height:44px}
+.wm b{font-size:28px;font-weight:900;letter-spacing:.18em}
+.white .wm{color:var(--ink)}
+html[dir=rtl] .wm{left:auto;right:64px}
+html[dir=rtl] .wm{left:auto;right:64px}
+
+/* ---------- S1 intro ---------- */
+#s1 .content{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.lockup{display:flex;align-items:center;gap:48px;direction:ltr}
+.mark{width:220px;height:220px;overflow:visible}
+.mark path,.mark rect{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round}
+.word{display:flex;font-size:230px;font-weight:900;letter-spacing:.06em;line-height:1;overflow:hidden;padding:0 .02em .04em}
+.word span{display:inline-block}
+#s1 .tag{margin-top:46px;font-size:44px;font-weight:500;color:var(--b100);letter-spacing:.04em}
+#s1 .bar{margin-top:30px;height:6px;width:520px;border-radius:3px;background:linear-gradient(90deg,var(--b500),var(--b300));transform-origin:center}
+
+/* ---------- S2 problem ---------- */
+#s2 .head{position:absolute;top:290px;inset-inline-start:130px;width:900px;white-space:nowrap}
+#s2 h1{font-size:92px;line-height:1.06;font-weight:800}
+#s2 .q{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
+#s2 .q h1{font-size:150px;font-weight:900;line-height:1}
+#s2 .q .uline{height:10px;width:640px;margin-top:28px;border-radius:5px;background:var(--b500);transform-origin:left}
+html[dir=rtl] #s2 .q .uline{transform-origin:right}
+.adcard{position:absolute;width:280px;background:#fff;border-radius:22px;color:var(--ink);box-shadow:0 30px 60px rgba(0,0,0,.35);overflow:visible;padding:16px}
+.adcard .h{display:flex;align-items:center;gap:10px}
+.adcard .av{width:40px;height:40px;border-radius:50%;flex:none}
+.adcard .nm{font-weight:700;font-size:18px;line-height:1.1}
+.adcard .sp{font-size:13px;color:var(--muted)}
+.adcard .media{margin-top:12px;height:170px;border-radius:14px;position:relative;overflow:hidden}
+.adcard .media .play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(255,255,255,.9)}
+.adcard .media .play::after{content:"";position:absolute;left:22px;top:17px;border-left:18px solid var(--ink);border-top:11px solid transparent;border-bottom:11px solid transparent}
+.adcard .ln{height:10px;border-radius:5px;background:#E3E9F4;margin-top:12px}
+.adcard .cta{margin-top:14px;height:40px;border-radius:10px;background:var(--mist);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:var(--b500)}
+.adcard .new{position:absolute;top:-16px;inset-inline-end:-14px;background:var(--b500);color:#fff;font-weight:800;font-size:17px;letter-spacing:.08em;padding:7px 14px;border-radius:999px;box-shadow:0 8px 20px rgba(46,107,255,.5)}
+
+/* ---------- S3 introducing ---------- */
+#s3 .content{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#s3 h1{font-size:150px;font-weight:900;line-height:1;margin-top:26px}
+#s3 .sub{font-size:44px;color:var(--b100);margin-top:30px;font-weight:400}
+#s3 .ring{position:absolute;left:50%;top:50%;width:1100px;height:1100px;margin:-550px 0 0 -550px;border-radius:50%;border:2px solid rgba(141,176,255,.18)}
+#s3 .ring.r2{width:1500px;height:1500px;margin:-750px 0 0 -750px;border-color:rgba(141,176,255,.10)}
+.pills{display:flex;gap:28px;margin-top:70px}
+.pill{display:flex;align-items:center;gap:18px;padding:22px 34px 22px 24px;border-radius:999px;background:rgba(255,255,255,.08);border:1.5px solid rgba(141,176,255,.35);font-size:30px;font-weight:600}
+html[dir=rtl] .pill{padding:22px 24px 22px 34px}
+.pill .ic{width:56px;height:56px;border-radius:50%;background:var(--b500);display:flex;align-items:center;justify-content:center;flex:none}
+.pill svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- S4 how it works ---------- */
+#s4 .top{position:absolute;top:150px;left:0;right:0;text-align:center}
+#s4 h2{font-size:92px;font-weight:900;margin-top:14px;line-height:1}
+#s4 .steps{position:absolute;top:410px;left:0;right:0;display:flex;justify-content:center;gap:90px}
+.step{position:relative;width:470px;height:470px;border-radius:32px;background:#fff;border:2px solid var(--line);padding:44px 40px;box-shadow:0 24px 50px rgba(10,30,74,.08)}
+.step .ring{position:absolute;inset:-3px;border-radius:34px;border:4px solid var(--b500);box-shadow:0 30px 70px rgba(46,107,255,.28);opacity:0}
+.step .num{font-size:30px;font-weight:800;color:var(--b500);letter-spacing:.1em}
+.step .ic{width:120px;height:120px;border-radius:30px;background:var(--n800);display:flex;align-items:center;justify-content:center;margin-top:22px;position:relative;overflow:hidden}
+.step .ic svg{width:66px;height:66px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.step h3{font-size:44px;font-weight:800;margin-top:34px;line-height:1.1}
+.step p{font-size:28px;color:var(--muted);margin-top:16px;line-height:1.35}
+#s4 svg.conn{position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:visible;pointer-events:none}
+#s4 svg.conn path{fill:none;stroke:var(--b500);stroke-width:5;stroke-linecap:round}
+
+/* ---------- S5 dashboard ---------- */
+#s5 .split{position:absolute;inset:0;display:flex;align-items:center;gap:80px;padding:60px 90px 0}
+.browser{width:1240px;height:740px;border-radius:22px;background:#F4F7FC;box-shadow:0 50px 100px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);overflow:hidden;flex:none;color:var(--ink);position:relative}
+.browser .chrome{height:48px;background:#E6ECF6;display:flex;align-items:center;gap:10px;padding:0 20px;direction:ltr}
+.browser .chrome i{width:14px;height:14px;border-radius:50%;background:#C5CFE0;display:block}
+.browser .chrome .tab{margin-left:24px;height:34px;align-self:flex-end;background:#F4F7FC;border-radius:10px 10px 0 0;padding:0 22px;display:flex;align-items:center;font-size:15px;font-weight:600;color:var(--ink)}
+.dash{padding:26px 30px}
+.dash .hd{display:flex;align-items:center;gap:16px}
+.dash .hd .lg{width:46px;height:46px;border-radius:12px;background:var(--n800);display:flex;align-items:center;justify-content:center}
+.dash .hd .lg svg{width:32px;height:32px}
+.dash .hd b{font-size:26px;font-weight:800;display:block;line-height:1.1}
+.dash .hd small{font-size:15px;color:var(--muted)}
+.dash .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
+.card{background:#fff;border-radius:16px;border:1px solid var(--line);padding:20px 22px;box-shadow:0 4px 14px rgba(10,30,74,.05)}
+.card h4{font-size:19px;font-weight:800;display:flex;align-items:center;justify-content:space-between}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 22px;border-radius:10px;font-weight:700;font-size:16px;background:var(--b500);color:#fff;white-space:nowrap}
+.btn.run{background:var(--n800);min-width:150px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-size:14px;font-weight:700}
+.badge .dot{width:9px;height:9px;border-radius:50%;background:currentColor}
+.badge.ok{background:#E2F8EE;color:#0E9A5B}
+.badge.run{background:var(--b100);color:var(--b500)}
+.status{display:flex;align-items:center;gap:14px;margin-top:16px;font-size:14px;color:var(--muted)}
+.pbar{height:8px;border-radius:4px;background:#E6ECF6;margin-top:16px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--b500),var(--b400));border-radius:4px}
+html[dir=rtl] .pbar i{margin-inline-start:0}
+.scan{margin-top:10px;font-size:14px;font-weight:600;color:var(--b500);height:20px;display:flex;align-items:center;gap:8px}
+.scan svg{width:18px;height:18px;stroke:#0E9A5B;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.frow{display:flex;gap:10px;margin-top:16px}
+.inp{height:42px;border-radius:10px;border:1.5px solid var(--line);background:#FAFBFE;display:flex;align-items:center;padding:0 12px;font-size:15px;color:var(--ink);overflow:hidden;white-space:nowrap;flex:1;min-width:0}
+.inp.url{flex:1.5}
+.inp .ph{color:#9AA8C2}
+.inp.focus{border-color:var(--b500);box-shadow:0 0 0 4px rgba(46,107,255,.15);background:#fff}
+.caret{display:inline-block;width:2px;height:20px;background:var(--b500);margin-inline-start:1px;vertical-align:middle}
+.comp{display:flex;align-items:center;justify-content:space-between;padding:12px 4px;border-bottom:1px solid #EDF1F8;overflow:hidden}
+.comp b{font-size:16px;display:block}
+.comp small{font-size:13px;color:var(--b500);direction:ltr;display:block;text-align:start}
+html[dir=rtl] .comp small{text-align:right}
+.comp .rm{font-size:13px;color:#C0392B;font-weight:700;background:#FDECEA;padding:5px 12px;border-radius:8px}
+.comp-wrap{overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;margin-top:14px;font-size:15px}
+.tbl th{font-size:13px;color:var(--muted);text-align:start;font-weight:700;padding:8px 6px;border-bottom:1.5px solid var(--line)}
+.tbl td{padding:0 6px;border-bottom:1px solid #EDF1F8;height:50px}
+.tbl tr.hl td{background:#F2F6FF}
+.tbl td .badge{padding:4px 11px;font-size:13px}
+.tbl .n{font-weight:800}
+.captions{display:flex;flex-direction:column;gap:46px;flex:1}
+.cap{display:flex;align-items:flex-start;gap:24px}
+.cap .no{width:64px;height:64px;border-radius:50%;background:var(--b500);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;flex:none}
+.cap .tx{font-size:40px;font-weight:700;line-height:1.15;padding-top:6px}
+
+#cursor{position:absolute;left:0;top:0;width:40px;height:40px;z-index:60;display:none;pointer-events:none}
+#cursor svg{width:40px;height:40px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+.ripple{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:4px solid var(--b500);z-index:59;display:none}
+
+/* ---------- S6 report ---------- */
+#s6 .split{position:absolute;inset:0;display:flex;flex-direction:row-reverse;align-items:center;justify-content:center;gap:150px;padding-top:20px}
+.phone{width:440px;height:860px;border-radius:64px;background:#020817;padding:16px;box-shadow:0 60px 120px rgba(0,0,0,.6),0 0 0 2px rgba(141,176,255,.25);flex:none;position:relative}
+.phone .scr{width:100%;height:100%;border-radius:50px;overflow:hidden;background:#E9EEF6;position:relative;color:var(--ink)}
+.phone .notch{position:absolute;top:26px;left:50%;width:120px;height:32px;margin-left:-60px;background:#020817;border-radius:20px;z-index:3}
+.chat-h{height:132px;background:var(--n800);display:flex;align-items:flex-end;gap:14px;padding:0 22px 18px;color:#fff}
+.chat-h .av{width:52px;height:52px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.chat-h .av svg{width:34px;height:34px}
+.chat-h b{display:block;font-size:20px;font-weight:700}
+.chat-h small{font-size:14px;color:var(--b300)}
+.chat-b{padding:20px 16px;background-image:radial-gradient(rgba(10,30,74,.06) 1.2px,transparent 1.4px);background-size:22px 22px;height:calc(100% - 132px)}
+.day{margin:0 auto 16px;width:max-content;font-size:13px;font-weight:700;color:var(--muted);background:#fff;padding:5px 14px;border-radius:8px}
+.typing{display:inline-flex;gap:6px;background:#fff;padding:14px 18px;border-radius:18px;border-start-start-radius:4px}
+.typing i{width:9px;height:9px;border-radius:50%;background:#9AA8C2;display:block}
+.bubble{background:#fff;border-radius:20px;border-start-start-radius:4px;padding:16px 18px 10px;width:370px;box-shadow:0 2px 6px rgba(10,30,74,.08);font-size:16.5px;line-height:1.42}
+.bubble .sec{overflow:hidden}
+.bubble .sec>div{padding:4px 8px;margin:0 -8px 6px;border-radius:10px}
+.bubble .rh{font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px}
+.bubble .rh svg{width:22px;height:22px;stroke:var(--b500);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.bubble .st{font-weight:800;color:var(--b500);font-size:15px;letter-spacing:.02em}
+.bubble ul{list-style:none}
+.bubble li{position:relative;padding-inline-start:16px}
+.bubble li::before{content:"";position:absolute;inset-inline-start:2px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--b500)}
+.bubble .lnk{color:#1D5BEA;text-decoration:underline;direction:ltr;display:block;text-align:start;font-size:15px}
+html[dir=rtl] .bubble .lnk{text-align:right}
+.bubble .tm{text-align:end;font-size:12px;color:#9AA8C2}
+.rcaps{display:flex;flex-direction:column;width:640px}
+.rcaps h2{font-size:78px;font-weight:900;line-height:1.02;margin:14px 0 50px}
+.rcap{display:flex;align-items:center;gap:22px;padding:18px 0;font-size:36px;font-weight:700;border-top:1.5px solid rgba(141,176,255,.18)}
+.rcap .no{width:54px;height:54px;border-radius:14px;background:rgba(46,107,255,.2);color:var(--b300);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;flex:none}
+
+/* ---------- S7 benefits ---------- */
+#s7 .top{position:absolute;top:150px;left:0;right:0;text-align:center}
+#s7 h2{font-size:100px;font-weight:900;margin-top:14px;line-height:1}
+#s7 .tiles{position:absolute;top:430px;left:0;right:0;display:flex;justify-content:center;gap:36px}
+.tile{width:388px;height:420px;border-radius:30px;background:var(--n800);color:#fff;padding:42px 36px;position:relative;overflow:hidden}
+.tile::after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(46,107,255,.35);filter:blur(50px);inset-inline-end:-80px;bottom:-90px}
+.tile .ic{width:96px;height:96px;border-radius:26px;background:var(--b500);display:flex;align-items:center;justify-content:center}
+.tile .ic svg{width:54px;height:54px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.tile h3{font-size:37px;font-weight:800;margin-top:38px;line-height:1.08}
+.tile p{font-size:27px;color:var(--b100);margin-top:16px;line-height:1.35;position:relative;z-index:1}
+
+/* ---------- S8 outro ---------- */
+#s8 .content{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#s8 .lockup .mark{width:150px;height:150px}
+#s8 .word{font-size:160px}
+#s8 h2{font-size:76px;font-weight:800;margin-top:60px;line-height:1.1}
+#s8 .sub{font-size:34px;color:var(--b300);margin-top:22px;font-weight:500}
+#fadeout{position:absolute;inset:0;background:var(--n950);opacity:0;z-index:90;pointer-events:none}
+#progress{position:absolute;left:0;bottom:0;height:6px;background:var(--b500);z-index:80;width:0}
+html[dir=rtl] #progress{left:auto;right:0}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- shared logo symbol -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="alto-mark" viewBox="0 0 120 120">
+      <rect x="6" y="6" width="108" height="108" rx="30" fill="none" stroke="currentColor" stroke-width="8"/>
+      <path d="M26 86 L50 50 L62 66 L80 40 L96 86" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="80" cy="26" r="0" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- S1 · Logo intro -->
+<section class="scene navy" id="s1" data-start="0" data-end="4.5">
+  <div class="scene-bg"></div>
+  <div class="content">
+    <div class="lockup">
+      <svg class="mark" viewBox="0 0 120 120">
+        <rect id="m-rect" x="6" y="6" width="108" height="108" rx="30" stroke-width="8"/>
+        <path id="m-peak" d="M26 86 L50 50 L62 66 L80 40 L96 86" stroke-width="8"/>
+      </svg>
+      <div class="word" id="s1-word"><span>A</span><span>L</span><span>T</span><span>O</span></div>
+    </div>
+    <div class="tag mask"><span data-in="1.5" data-fx="rise" data-t="s1.tag"></span></div>
+    <div class="bar" id="s1-bar"></div>
+  </div>
+</section>
+
+<!-- S2 · The problem -->
+<section class="scene navy has-wm" id="s2" data-start="4.5" data-end="11">
+  <div class="scene-bg"></div>
+  <div class="content">
+    <div id="s2-cards"></div>
+    <div class="head" id="s2-head">
+      <h1><span class="mask"><span data-in="0.35" data-fx="rise" data-t="s2.l1"></span></span>
+          <span class="mask"><span data-in="0.55" data-fx="rise" data-t="s2.l2"></span></span>
+          <span class="mask"><span data-in="0.75" data-fx="rise" data-t="s2.l3"></span></span>
+          <span class="mask"><span class="accent" data-in="1.05" data-fx="rise" data-t="s2.l4"></span></span></h1>
+    </div>
+    <div class="q" id="s2-q">
+      <h1 class="mask"><span data-in="4.35" data-fx="rise" data-t="s2.q"></span></h1>
+      <div class="uline" id="s2-uline"></div>
+    </div>
+  </div>
+</section>
+
+<!-- S3 · Introducing -->
+<section class="scene navy has-wm" id="s3" data-start="11" data-end="18">
+  <div class="scene-bg"></div>
+  <div class="content">
+    <div class="ring" id="s3-r1"></div><div class="ring r2" id="s3-r2"></div>
+    <div class="kicker" data-in="0.4" data-fx="up" data-t="s3.k"></div>
+    <h1 class="mask"><span data-in="0.6" data-fx="rise" data-t="s3.title"></span></h1>
+    <div class="sub" data-in="1.2" data-fx="up" data-t="s3.sub"></div>
+    <div class="pills">
+      <div class="pill" data-in="2.1" data-fx="pop"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg></span><span data-t="s3.p1"></span></div>
+      <div class="pill" data-in="2.5" data-fx="pop"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></span><span data-t="s3.p2"></span></div>
+      <div class="pill" data-in="2.9" data-fx="pop"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 14h4.5"/></svg></span><span data-t="s3.p3"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- S4 · How it works -->
+<section class="scene white has-wm" id="s4" data-start="18" data-end="29">
+  <div class="scene-bg"></div>
+  <div class="content">
+    <div class="top">
+      <div class="kicker" data-in="0.35" data-fx="up" data-t="s4.k"></div>
+      <h2 class="mask"><span data-in="0.5" data-fx="rise" data-t="s4.title"></span></h2>
+    </div>
+    <svg class="conn"><path id="s4-c1"/><path id="s4-c2"/></svg>
+    <div class="steps">
+      <div class="step" data-in="1.0" data-fx="up"><div class="ring"></div><div class="num">01</div>
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.6"/><path d="M2.5 20c.6-3.6 3.2-5.6 6.5-5.6s5.9 2 6.5 5.6"/><path d="M19 8v6M16 11h6"/></svg></div>
+        <h3 data-t="s4.s1t"></h3><p data-t="s4.s1d"></p></div>
+      <div class="step" data-in="4.0" data-fx="up"><div class="ring"></div><div class="num">02</div>
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="#fff"/><path id="s4-sweep" d="M12 12L12 3"/></svg></div>
+        <h3 data-t="s4.s2t"></h3><p data-t="s4.s2d"></p></div>
+      <div class="step" data-in="7.0" data-fx="up"><div class="ring"></div><div class="num">03</div>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 14h4.5"/></svg></div>
+        <h3 data-t="s4.s3t"></h3><p data-t="s4.s3d"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S5 · Inside the dashboard -->
+<section class="scene navy has-wm" id="s5" data-start="29" data-end="47">
+  <div class="scene-bg"></div>
+  <div class="content">
+    <div class="split">
+      <div class="browser" id="browser" data-in="0.15" data-fx="up">
+        <div class="chrome"><i></i><i></i><i></i><div class="tab" data-t="ui.app"></div></div>
+        <div class="dash">
+          <div class="hd"><div class="lg"><svg style="color:#fff"><use href="#alto-mark"/></svg></div><div><b data-t="ui.app"></b><small data-t="ui.sub"></small></div></div>
+          <div class="grid">
+            <div>
+              <div class="card">
+                <h4><span data-t="ui.agent"></span><span class="btn run" id="btn-run"></span></h4>
+                <div class="status"><span class="badge ok" id="badge"><span class="dot"></span><span id="badge-t"></span></span><span id="last-run"></span></div>
+                <div class="pbar"><i id="pbar"></i></div>
+                <div class="scan" id="scan"></div>
+              </div>
+              <div class="card" style="margin-top:22px">
+                <h4><span id="comp-title"></span></h4>
+                <div class="frow">
+                  <div class="inp" id="in-name"></div>
+                  <div class="inp url" id="in-url"></div>
+                  <span class="btn" id="btn-add" data-t="ui.add"></span>
+                </div>
+                <div style="margin-top:8px">
+                  <div class="comp"><div><b data-t="ui.cA"></b><small>facebook.com/ads/library/?id=1517…</small></div><span class="rm" data-t="ui.rm"></span></div>
+                  <div class="comp"><div><b data-t="ui.cB"></b><small>facebook.com/ads/library/?id=2093…</small></div><span class="rm" data-t="ui.rm"></span></div>
+                  <div class="comp-wrap" id="comp-new"><div class="comp"><div><b data-t="ui.cC"></b><small>facebook.com/ads/library/?id=8841…</small></div><span class="rm" data-t="ui.rm"></span></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card" id="hist">
+              <h4><span data-t="ui.hist"></span></h4>
+              <table class="tbl">
+                <thead><tr><th data-t="ui.date"></th><th data-t="ui.comp"></th><th data-t="ui.found"></th><th data-t="ui.st"></th></tr></thead>
+                <tbody id="hist-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="captions">
+        <div class="kicker" data-in="0.4" data-fx="up" data-t="s5.k" style="margin-bottom:-6px;font-size:22px"></div>
+        <div class="cap" id="cap0" data-in="0.7" data-fx="end"><span class="no">1</span><span class="tx" data-t="s5.c1"></span></div>
+        <div class="cap" id="cap1" data-in="6.6" data-fx="end"><span class="no">2</span><span class="tx" data-t="s5.c2"></span></div>
+        <div class="cap" id="cap2" data-in="11.8" data-fx="end"><span class="no">3</span><span class="tx" data-t="s5.c3"></span></div>
+      </div>
+    </div>
+    <div class="ripple" id="ripple"></div>
+    <div id="cursor"><svg viewBox="0 0 40 40"><path d="M8 4 L8 32 L15.5 25 L20.5 36 L25.5 33.8 L20.6 23 L31 23 Z" fill="#fff" stroke="#0A1E4A" stroke-width="2.4" stroke-linejoin="round"/></svg></div>
+  </div>
+</section>
+
+<!-- S6 · The WhatsApp report -->
+<section class="scene navy has-wm" id="s6" data-start="47" data-end="59">
+  <div class="scene-bg"></div>
+  <div class="content">
+    <div class="split">
+      <div class="phone" id="phone">
+        <div class="scr">
+          <div class="notch"></div>
+          <div class="chat-h"><div class="av"><svg style="color:#0A1E4A"><use href="#alto-mark"/></svg></div><div><b data-t="r.group"></b><small data-t="r.members"></small></div></div>
+          <div class="chat-b">
+            <div class="day" data-t="r.today"></div>
+            <div class="typing" id="typing"><i></i><i></i><i></i></div>
+            <div class="bubble" id="bubble">
+              <div class="sec"><div><div class="rh"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span data-t="r.title"></span></div></div></div>
+              <div class="sec"><div data-t="r.p1"></div></div>
+              <div class="sec"><div><div class="st" data-t="r.h2"></div><ul><li data-t="r.p2a"></li><li data-t="r.p2b"></li></ul></div></div>
+              <div class="sec"><div><div class="st" data-t="r.h3"></div><ul><li data-t="r.p3a"></li><li data-t="r.p3b"></li></ul></div></div>
+              <div class="sec"><div><div class="st" data-t="r.h4"></div><span class="lnk">facebook.com/ads/library/?id=8841…</span><span data-t="r.p4"></span></div></div>
+              <div class="tm">09:15</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rcaps">
+        <div class="kicker" data-in="0.3" data-fx="up" data-t="s6.k"></div>
+        <h2 class="mask"><span data-in="0.45" data-fx="rise" data-t="s6.title"></span></h2>
+        <div class="rcap" id="rc0" data-in="2.2" data-fx="end"><span class="no">1</span><span data-t="s6.c1"></span></div>
+        <div class="rcap" id="rc1" data-in="4.3" data-fx="end"><span class="no">2</span><span data-t="s6.c2"></span></div>
+        <div class="rcap" id="rc2" data-in="6.4" data-fx="end"><span class="no">3</span><span data-t="s6.c3"></span></div>
+        <div class="rcap" id="rc3" data-in="8.5" data-fx="end"><span class="no">4</span><span data-t="s6.c4"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S7 · Benefits -->
+<section class="scene white has-wm" id="s7" data-start="59" data-end="67">
+  <div class="scene-bg"></div>
+  <div class="content">
+    <div class="top">
+      <div class="kicker" data-in="0.35" data-fx="up" data-t="s7.k"></div>
+      <h2 class="mask"><span data-in="0.5" data-fx="rise" data-t="s7.title"></span></h2>
+    </div>
+    <div class="tiles">
+      <div class="tile" data-in="1.1" data-fx="up"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/></svg></div><h3 data-t="s7.b1t"></h3><p data-t="s7.b1d"></p></div>
+      <div class="tile" data-in="1.35" data-fx="up"><div class="ic"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div><h3 data-t="s7.b2t"></h3><p data-t="s7.b2d"></p></div>
+      <div class="tile" data-in="1.6" data-fx="up"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3"/></svg></div><h3 data-t="s7.b3t"></h3><p data-t="s7.b3d"></p></div>
+      <div class="tile" data-in="1.85" data-fx="up"><div class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z"/><path d="M8.5 12.2l2.3 2.3 4.7-4.7"/></svg></div><h3 data-t="s7.b4t"></h3><p data-t="s7.b4d"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S8 · Outro -->
+<section class="scene navy" id="s8" data-start="67" data-end="73">
+  <div class="scene-bg"></div>
+  <div class="content">
+    <div class="lockup">
+      <svg class="mark" viewBox="0 0 120 120">
+        <rect id="m2-rect" x="6" y="6" width="108" height="108" rx="30" stroke-width="8"/>
+        <path id="m2-peak" d="M26 86 L50 50 L62 66 L80 40 L96 86" stroke-width="8"/>
+      </svg>
+      <div class="word" id="s8-word"><span>A</span><span>L</span><span>T</span><span>O</span></div>
+    </div>
+    <h2 class="mask"><span data-in="1.3" data-fx="rise" data-t="s8.line"></span></h2>
+    <div class="sub" data-in="1.9" data-fx="up" data-t="s8.sub"></div>
+  </div>
+</section>
+
+<div id="progress"></div>
+<div id="fadeout"></div>
+</div></div>
+
+<script>
+/* ============ copy (EN / HE) ============ */
+const STR = {
+en:{
+  's1.tag':'Competitor Intelligence Dashboard',
+  's2.l1':'Your competitors','s2.l2':'launch new ads','s2.l3':'every single week.','s2.l4':'Do you see them?',
+  's2.q':'Are you keeping up?',
+  's3.k':'Introducing','s3.title':'The Alto Dashboard','s3.sub':'Your always-on competitor research agent.',
+  's3.p1':'Tracks competitors’ Meta ads','s3.p2':'AI spots what changed','s3.p3':'Insights on WhatsApp',
+  's4.k':'How it works','s4.title':'Three simple steps',
+  's4.s1t':'Add competitors','s4.s1d':'Paste their Meta Ads Library link. That’s it.',
+  's4.s2t':'Alto scans their ads','s4.s2d':'Every new and removed ad is captured and compared.',
+  's4.s3t':'Get your report','s4.s3d':'A short AI briefing lands in your WhatsApp group.',
+  's5.k':'Inside the dashboard','s5.c1':'Add a competitor in seconds','s5.c2':'Run the agent with one click','s5.c3':'Every scan saved to your history',
+  'ui.app':'Alto Dashboard','ui.sub':'Competitor research agent','ui.agent':'Agent status','ui.runBtn':'Run agent','ui.running':'Running…',
+  'ui.active':'Active','ui.success':'Last run: Success','ui.lastOld':'Sep 25, 09:12','ui.lastNew':'Oct 2, 09:14',
+  'ui.comps':'Competitors','ui.phName':'Competitor name','ui.phUrl':'Meta Ads Library link','ui.add':'Add','ui.rm':'Remove',
+  'ui.cA':'Competitor A','ui.cB':'Competitor B','ui.cC':'Competitor C','ui.typeName':'Competitor C','ui.typeUrl':'facebook.com/ads/library/?id=8841…',
+  'ui.scanning':'Scanning','ui.analyzing':'AI is writing your report…','ui.sent':'Report sent to WhatsApp',
+  'ui.hist':'Run history','ui.date':'Date','ui.comp':'Competitor','ui.found':'Ads found','ui.st':'Status','ui.ok':'Success',
+  'ui.dNew':'Oct 2','ui.dOld':'Sep 25',
+  's6.k':'What you get','s6.title':'A clear report, right in WhatsApp',
+  's6.c1':'What changed this week','s6.c2':'Their strategy, decoded','s6.c3':'Your next moves','s6.c4':'Ads worth a closer look',
+  'r.group':'Alto · Competitor Research','r.members':'Alto Agent, You','r.today':'Today',
+  'r.title':'Weekly Report — Your Brand',
+  'r.p1':'Competitor A launched 3 new ads built around a limited-time discount.',
+  'r.h2':'Key takeaways','r.p2a':'Pushing urgency: “ends this week”','r.p2b':'Leaning on short video creative',
+  'r.h3':'Recommended actions','r.p3a':'Launch a counter-offer this week','r.p3b':'Refresh your top-performing video ad',
+  'r.h4':'Ads worth a look','r.p4':'Their strongest offer right now.',
+  's7.k':'Why Alto','s7.title':'Stay one step ahead',
+  's7.b1t':'Save hours','s7.b1d':'No more digging through the Ads Library by hand.',
+  's7.b2t':'Never miss a move','s7.b2d':'New and removed ads flagged automatically.',
+  's7.b3t':'Act with clarity','s7.b3d':'Concrete next steps, not raw data.',
+  's7.b4t':'Right where you are','s7.b4d':'Delivered straight to your WhatsApp.',
+  's8.line':'See every move. Make the next one.','s8.sub':'Alto Dashboard · Competitor intelligence, made simple'
+},
+he:{
+  's1.tag':'לוח בקרה למודיעין מתחרים',
+  's2.l1':'המתחרים שלכם','s2.l2':'מעלים מודעות חדשות','s2.l3':'כל שבוע מחדש.','s2.l4':'אתם רואים אותן?',
+  's2.q':'אתם מספיקים לעקוב?',
+  's3.k':'הכירו את','s3.title':'Alto Dashboard','s3.sub':'סוכן מחקר המתחרים שלכם – תמיד ער.',
+  's3.p1':'מעקב אחר מודעות המתחרים במטא','s3.p2':'AI מזהה מה השתנה','s3.p3':'תובנות ישר לוואטסאפ',
+  's4.k':'איך זה עובד','s4.title':'שלושה צעדים פשוטים',
+  's4.s1t':'מוסיפים מתחרים','s4.s1d':'מדביקים את הקישור שלהם מ-Meta Ads Library. זהו.',
+  's4.s2t':'Alto סורק את המודעות','s4.s2d':'כל מודעה חדשה או שהוסרה – נקלטת ומושווית.',
+  's4.s3t':'מקבלים דו״ח','s4.s3d':'סיכום AI קצר נוחת בקבוצת הוואטסאפ שלכם.',
+  's5.k':'בתוך לוח הבקרה','s5.c1':'מוסיפים מתחרה בשניות','s5.c2':'מפעילים את הסוכן בלחיצה','s5.c3':'כל סריקה נשמרת בהיסטוריה',
+  'ui.app':'Alto Dashboard','ui.sub':'סוכן מחקר מתחרים','ui.agent':'סטטוס סוכן','ui.runBtn':'הפעל סוכן','ui.running':'רץ כעת...',
+  'ui.active':'פעיל','ui.success':'הרצה אחרונה: הצלחה','ui.lastOld':'25.09 09:12','ui.lastNew':'02.10 09:14',
+  'ui.comps':'מתחרים','ui.phName':'שם המתחרה','ui.phUrl':'קישור ל-Meta Ads Library','ui.add':'הוסף','ui.rm':'הסר',
+  'ui.cA':'מתחרה א׳','ui.cB':'מתחרה ב׳','ui.cC':'מתחרה ג׳','ui.typeName':'מתחרה ג׳','ui.typeUrl':'facebook.com/ads/library/?id=8841…',
+  'ui.scanning':'סורק את','ui.analyzing':'ה-AI כותב את הדו״ח…','ui.sent':'הדו״ח נשלח לוואטסאפ',
+  'ui.hist':'היסטוריית הרצות','ui.date':'תאריך','ui.comp':'מתחרה','ui.found':'מודעות שנמצאו','ui.st':'סטטוס','ui.ok':'הצלחה',
+  'ui.dNew':'02.10','ui.dOld':'25.09',
+  's6.k':'מה מקבלים','s6.title':'דו״ח ברור, ישר בוואטסאפ',
+  's6.c1':'מה השתנה השבוע','s6.c2':'האסטרטגיה שלהם, מפוענחת','s6.c3':'הצעדים הבאים שלכם','s6.c4':'מודעות ששווה לבדוק',
+  'r.group':'Alto · מחקר מתחרים','r.members':'סוכן Alto, את/ה','r.today':'היום',
+  'r.title':'דו״ח שבועי – המותג שלכם',
+  'r.p1':'מתחרה א׳ העלה 3 מודעות חדשות סביב הנחה לזמן מוגבל.',
+  'r.h2':'תובנות מרכזיות','r.p2a':'משחקים על דחיפות: ״רק השבוע״','r.p2b':'נשענים על סרטוני וידאו קצרים',
+  'r.h3':'המלצות לפעולה','r.p3a':'להשיק הצעת נגד עוד השבוע','r.p3b':'לרענן את מודעת הווידאו המובילה',
+  'r.h4':'מודעות ששווה לבדוק','r.p4':'ההצעה החזקה שלהם כרגע.',
+  's7.k':'למה Alto','s7.title':'תמיד צעד אחד קדימה',
+  's7.b1t':'חוסכים שעות','s7.b1d':'בלי לחפור ידנית בספריית המודעות.',
+  's7.b2t':'לא מפספסים מהלך','s7.b2d':'מודעות חדשות ושהוסרו מסומנות אוטומטית.',
+  's7.b3t':'פועלים בבהירות','s7.b3d':'צעדים ברורים לביצוע, לא סתם נתונים.',
+  's7.b4t':'בדיוק איפה שאתם','s7.b4d':'נשלח ישירות לוואטסאפ שלכם.',
+  's8.line':'רואים כל מהלך. עושים את הבא.','s8.sub':'Alto Dashboard · מודיעין מתחרים, בפשטות'
+}};
+
+/* ============ setup ============ */
+const Q = new URLSearchParams(location.search);
+const LANG = Q.get('lang') === 'he' ? 'he' : 'en';
+const RTL = LANG === 'he';
+const L = STR[LANG];
+document.documentElement.lang = LANG;
+document.documentElement.dir = RTL ? 'rtl' : 'ltr';
+document.querySelectorAll('[data-t]').forEach(el => { el.textContent = L[el.dataset.t] ?? el.dataset.t; });
+const DUR = 73, FPS = 30;
+const $ = s => document.querySelector(s);
+const stage = $('#stage');
+
+/* ============ math ============ */
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, p) => a + (b - a) * p;
+const E = {
+  out: p => 1 - Math.pow(1 - p, 3),
+  out5: p => 1 - Math.pow(1 - p, 5),
+  inOut: p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2,
+  back: p => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+  in: p => p * p * p,
+};
+const SX = RTL ? -1 : 1; // inline direction sign
+
+/* ============ scenes ============ */
+const scenes = [...document.querySelectorAll('.scene')].map((el, i, arr) => ({
+  el, start: +el.dataset.start, end: +el.dataset.end, idx: i,
+  bg: el.querySelector('.scene-bg'),
+  ins: [...el.querySelectorAll('[data-in]')].map(n => ({ n, at: +n.dataset.in, fx: n.dataset.fx || 'up' })),
+}));
+const WIPE = 0.55; // seconds a new scene takes to wipe over the previous one
+scenes.forEach((s, i) => {
+  s.el.style.zIndex = 10 + i;
+  if (s.el.classList.contains('has-wm')) {
+    const wm = document.createElement('div');
+    wm.className = 'wm';
+    wm.innerHTML = '<svg><use href="#alto-mark"/></svg><b>ALTO</b>';
+    s.el.appendChild(wm);
+  }
+  if (s.el.classList.contains('navy')) {
+    s.bg.insertAdjacentHTML('beforeend', '<div class="orb a"></div><div class="orb b"></div>');
+  }
+  if (i > 0) {
+    const edge = document.createElement('div');
+    edge.className = 'wipe-edge';
+    s.el.appendChild(edge);
+    s.edge = edge;
+  }
+});
+
+function applyFx(n, at, fx, local) {
+  const raw = prog(local, at, at + (fx === 'rise' ? 0.7 : fx === 'pop' ? 0.55 : 0.6));
+  let tf = '', o = 1;
+  if (fx === 'rise') { const p = E.out5(raw); tf = `translateY(${(1 - p) * 115}%)`; }
+  else if (fx === 'pop') { const p = E.back(raw); o = clamp(raw * 3); tf = `scale(${lerp(.6, 1, p)})`; }
+  else if (fx === 'up') { const p = E.out(raw); o = clamp(raw * 1.6); tf = `translateY(${(1 - p) * 50}px)`; }
+  else if (fx === 'end') { const p = E.out(raw); o = clamp(raw * 1.6); tf = `translateX(${SX * (1 - p) * 70}px)`; }
+  else if (fx === 'start') { const p = E.out(raw); o = clamp(raw * 1.6); tf = `translateX(${-SX * (1 - p) * 70}px)`; }
+  else { o = E.out(raw); }
+  n.style.opacity = o;
+  n.style.transform = tf;
+  return raw;
+}
+
+function bgMotion(s, t) {
+  if (!s.bg) return;
+  s.bg.style.setProperty('--gx', `${(t * 6) % 40}px`);
+  s.bg.style.setProperty('--gy', `${(t * 3) % 40}px`);
+  const a = s.bg.querySelector('.orb.a'), b = s.bg.querySelector('.orb.b');
+  if (a) { a.style.left = `${1100 + Math.sin(t * .35) * 260}px`; a.style.top = `${-160 + Math.cos(t * .28) * 140}px`; }
+  if (b) { b.style.left = `${-120 + Math.cos(t * .3) * 200}px`; b.style.top = `${560 + Math.sin(t * .42) * 160}px`; }
+}
+
+/* ============ per-scene custom animation ============ */
+const custom = {};
+
+/* --- S1 --- */
+const mRect = $('#m-rect'), mPeak = $('#m-peak');
+const RLEN = 381, PLEN = 144; // perimeter of the rounded rect / length of the peak polyline
+[mRect, $('#m2-rect')].forEach(r => r.style.strokeDasharray = RLEN);
+[mPeak, $('#m2-peak')].forEach(r => r.style.strokeDasharray = PLEN);
+function drawLockup(local, rect, peak, word, t0) {
+  rect.style.strokeDashoffset = RLEN * (1 - E.inOut(prog(local, t0, t0 + .8)));
+  peak.style.strokeDashoffset = PLEN * (1 - E.out(prog(local, t0 + .35, t0 + 1.05)));
+  [...word.children].forEach((c, i) => {
+    const p = E.out5(prog(local, t0 + .45 + i * .07, t0 + 1.15 + i * .07));
+    c.style.transform = `translateY(${(1 - p) * 105}%)`;
+  });
+}
+custom.s1 = (local) => {
+  drawLockup(local, mRect, mPeak, $('#s1-word'), 0.15);
+  const lock = $('#s1 .lockup');
+  const pulse = E.out(prog(local, 1.0, 1.4));
+  lock.style.transform = `scale(${1 + 0.03 * Math.sin(pulse * Math.PI)})`;
+  const bar = $('#s1-bar');
+  bar.style.transform = `scaleX(${E.out5(prog(local, 1.7, 2.4))})`;
+  const out = E.in(prog(local, 3.9, 4.5));
+  $('#s1 .content').style.transform = `scale(${1 + out * .25})`;
+  $('#s1 .content').style.opacity = 1 - out;
+};
+
+/* --- S2 --- */
+const cardDefs = [
+  { x: 1060, y: 110, r: -6, g: ['#2E6BFF', '#0A1E4A'], av: '#2E6BFF', name: 'ui.cA', play: 1 },
+  { x: 1430, y: 70,  r: 5,  g: ['#8DB0FF', '#2E6BFF'], av: '#0A1E4A', name: 'ui.cB', play: 0 },
+  { x: 1240, y: 520, r: 3,  g: ['#123070', '#4F86FF'], av: '#4F86FF', name: 'ui.cC', play: 0 },
+  { x: 1580, y: 470, r: -4, g: ['#0A1E4A', '#8DB0FF'], av: '#2E6BFF', name: 'ui.cA', play: 1 },
+];
+const cardsHost = $('#s2-cards');
+cardDefs.forEach((d, i) => {
+  const c = document.createElement('div');
+  c.className = 'adcard';
+  const x = RTL ? 1920 - d.x - 280 : d.x;
+  c.style.left = x + 'px'; c.style.top = d.y + 'px';
+  c.innerHTML = `<div class="h"><div class="av" style="background:${d.av}"></div><div><div class="nm">${L[d.name]}</div><div class="sp">${RTL ? 'ממומן' : 'Sponsored'}</div></div></div>
+    <div class="media" style="background:linear-gradient(135deg,${d.g[0]},${d.g[1]})">${d.play ? '<div class="play"></div>' : ''}</div>
+    <div class="ln" style="width:92%"></div><div class="ln" style="width:64%"></div>
+    <div class="cta">${RTL ? 'למידע נוסף' : 'Learn more'}</div><div class="new">${RTL ? 'חדש' : 'NEW'}</div>`;
+  cardsHost.appendChild(c);
+  d.el = c;
+});
+custom.s2 = (local, t) => {
+  const dim = E.inOut(prog(local, 3.7, 4.3));
+  cardDefs.forEach((d, i) => {
+    const at = 0.9 + i * 0.42;
+    const raw = prog(local, at, at + .55);
+    const p = E.back(raw);
+    const fl = Math.sin(t * 1.3 + i * 1.7) * 9;
+    const drift = -SX * dim * 60;
+    d.el.style.opacity = clamp(raw * 3) * (1 - dim * .8);
+    d.el.style.transform = `translate(${drift}px, ${fl + (1 - p) * 60}px) rotate(${d.r * (RTL ? -1 : 1)}deg) scale(${lerp(.5, 1, p) * (1 - dim * .12)})`;
+    d.el.style.filter = dim > 0 ? `blur(${dim * 6}px)` : '';
+    const nw = d.el.querySelector('.new');
+    const np = E.back(prog(local, at + .4, at + .8));
+    nw.style.transform = `scale(${np})`;
+  });
+  const h = $('#s2-head');
+  h.style.opacity = 1 - dim;
+  h.style.transform = `translateY(${-dim * 40}px)`;
+  $('#s2-uline').style.transform = `scaleX(${E.out5(prog(local, 4.85, 5.5))})`;
+};
+
+/* --- S3 --- */
+custom.s3 = (local) => {
+  const p = E.out(prog(local, 0.2, 1.6));
+  $('#s3-r1').style.transform = `scale(${lerp(.4, 1, p) + local * .01})`;
+  $('#s3-r1').style.opacity = p;
+  const p2 = E.out(prog(local, 0.5, 2.0));
+  $('#s3-r2').style.transform = `scale(${lerp(.4, 1, p2) + local * .008})`;
+  $('#s3-r2').style.opacity = p2;
+};
+
+/* --- S4 --- */
+const steps = [...document.querySelectorAll('#s4 .step')];
+const STEP_AT = [1.0, 4.0, 7.0];
+let connGeom = null;
+function measureConn() {
+  // connector paths between card centres (stage coords, measured with no transforms)
+  const sr = stage.getBoundingClientRect(), k = sr.width / 1920;
+  const rects = steps.map(s => { const tr = s.style.transform; s.style.transform = 'none'; const r = s.getBoundingClientRect(); s.style.transform = tr; return r; });
+  const pts = rects.map(r => ({ l: (r.left - sr.left) / k, r: (r.right - sr.left) / k, y: (r.top - sr.top) / k + 205 }));
+  const order = RTL ? [...pts].sort((a, b) => b.l - a.l) : [...pts].sort((a, b) => a.l - b.l);
+  connGeom = [0, 1].map(i => {
+    const a = order[i], b = order[i + 1];
+    const x1 = RTL ? a.l - 14 : a.r + 14, x2 = RTL ? b.r + 14 : b.l - 14;
+    return { d: `M${x1} ${a.y} L${x2} ${b.y}`, len: Math.hypot(x2 - x1, b.y - a.y) };
+  });
+  ['#s4-c1', '#s4-c2'].forEach((id, i) => { const p = $(id); p.setAttribute('d', connGeom[i].d); p.dataset.len = connGeom[i].len; p.style.strokeDasharray = p.dataset.len; });
+}
+custom.s4 = (local, t) => {
+  if (!connGeom) measureConn();
+  ['#s4-c1', '#s4-c2'].forEach((id, i) => {
+    const p = $(id), len = +p.dataset.len;
+    p.style.strokeDashoffset = len * (1 - E.inOut(prog(local, STEP_AT[i + 1] - .55, STEP_AT[i + 1] - .05)));
+  });
+  steps.forEach((s, i) => {
+    const on = prog(local, STEP_AT[i] + .2, STEP_AT[i] + .6) - (i < 2 ? prog(local, STEP_AT[i + 1], STEP_AT[i + 1] + .4) : 0);
+    s.querySelector('.ring').style.opacity = on;
+    const base = s.style.transform || '';
+    s.style.transform = base + ` scale(${1 + on * .045})`;
+  });
+  $('#s4-sweep').setAttribute('transform', `rotate(${(t * 220) % 360} 12 12)`);
+};
+
+/* --- S5 dashboard --- */
+const inName = $('#in-name'), inUrl = $('#in-url'), btnRun = $('#btn-run'), badge = $('#badge'), badgeT = $('#badge-t');
+const lastRun = $('#last-run'), pbar = $('#pbar'), scan = $('#scan'), compNew = $('#comp-new'), compTitle = $('#comp-title');
+const cursor = $('#cursor'), ripple = $('#ripple'), browser = $('#browser');
+const histBody = $('#hist-body');
+const histRows = [
+  { d: 'ui.dNew', c: 'ui.cC', n: 6, nw: 1 }, { d: 'ui.dNew', c: 'ui.cB', n: 9, nw: 1 }, { d: 'ui.dNew', c: 'ui.cA', n: 14, nw: 1 },
+  { d: 'ui.dOld', c: 'ui.cB', n: 8 }, { d: 'ui.dOld', c: 'ui.cA', n: 12 },
+];
+histRows.forEach((r, i) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${L[r.d]}</td><td><b>${L[r.c]}</b></td><td class="n">${r.n}</td><td><span class="badge ok"><span class="dot"></span>${L['ui.ok']}</span></td>`;
+  histBody.appendChild(tr);
+  r.el = tr;
+  if (r.nw) tr.id = 'hist-row-' + i;
+});
+let compNewH = 0;
+function typed(str, local, a, b) {
+  const chars = [...str];
+  const n = Math.round(chars.length * prog(local, a, b));
+  return chars.slice(0, n).join('');
+}
+function caret(t) { return (Math.floor(t * 2.2) % 2 === 0) ? '<span class="caret"></span>' : '<span class="caret" style="opacity:0"></span>'; }
+function inputHTML(val, ph, focused, t, ltr) {
+  const d = ltr ? ' dir="ltr" style="unicode-bidi:isolate"' : '';
+  if (!val) return (focused ? caret(t) : '') + `<span class="ph">${ph}</span>`;
+  return `<span${d}>${val}</span>` + (focused ? caret(t) : '');
+}
+const CLICKS = [2.0, 3.95, 5.8, 7.6];
+const PATH = [
+  { t: 1.2, at: () => ptIn(browser, .55, .92) }, { t: 2.0, at: () => ptIn(inName, .35, .55) },
+  { t: 3.4, at: () => ptIn(inName, .35, .55) }, { t: 3.95, at: () => ptIn(inUrl, .4, .55) },
+  { t: 5.2, at: () => ptIn(inUrl, .4, .55) }, { t: 5.8, at: () => ptIn($('#btn-add'), .5, .55) },
+  { t: 6.8, at: () => ptIn($('#btn-add'), .5, .55) }, { t: 7.6, at: () => ptIn(btnRun, .5, .55) },
+  { t: 12.4, at: () => ptIn(btnRun, .5, .55) }, { t: 13.3, at: () => ptIn($('#hist-row-0'), .55, .5) },
+];
+function ptIn(el, fx, fy) {
+  const sr = stage.getBoundingClientRect(), k = sr.width / 1920, r = el.getBoundingClientRect();
+  return { x: (r.left - sr.left + r.width * fx) / k, y: (r.top - sr.top + r.height * fy) / k };
+}
+custom.s5 = (local, t) => {
+  if (!compNewH) { compNew.style.height = 'auto'; compNewH = compNew.scrollHeight; }
+  // inputs
+  const fName = local >= 2.0 && local < 3.95, fUrl = local >= 3.95 && local < 5.8;
+  const cleared = local >= 5.9;
+  const nameV = cleared ? '' : typed(L['ui.typeName'], local, 2.15, 3.2);
+  const urlV = cleared ? '' : typed(L['ui.typeUrl'], local, 4.05, 5.05);
+  inName.classList.toggle('focus', fName); inUrl.classList.toggle('focus', fUrl);
+  inName.innerHTML = inputHTML(nameV, L['ui.phName'], fName, t, false);
+  inUrl.innerHTML = inputHTML(urlV, L['ui.phUrl'], fUrl, t, true);
+  // new competitor row
+  const rp = E.out(prog(local, 5.9, 6.35));
+  compNew.style.height = (compNewH * rp) + 'px';
+  compNew.style.opacity = rp;
+  compNew.firstElementChild.style.background = `rgba(46,107,255,${0.12 * (1 - prog(local, 6.4, 7.6))})`;
+  compTitle.textContent = `${L['ui.comps']} (${local >= 5.9 ? 3 : 2})`;
+  // agent run
+  const running = local >= 7.6 && local < 11.6;
+  const done = local >= 11.6;
+  btnRun.textContent = running ? L['ui.running'] : L['ui.runBtn'];
+  btnRun.style.opacity = running ? .55 : 1;
+  btnRun.style.transform = `scale(${1 - .06 * Math.sin(Math.PI * prog(local, 7.55, 7.8))})`;
+  badge.className = 'badge ' + (running ? 'run' : 'ok');
+  badgeT.textContent = running ? L['ui.active'] : L['ui.success'];
+  badge.querySelector('.dot').style.opacity = running ? (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 9))) : 1;
+  lastRun.textContent = done ? L['ui.lastNew'] : L['ui.lastOld'];
+  lastRun.style.direction = 'ltr';
+  const pp = prog(local, 7.7, 11.3);
+  pbar.style.width = (running || done ? E.inOut(pp) * 100 : 0) + '%';
+  pbar.style.opacity = done ? 1 - prog(local, 12.4, 12.8) : 1;
+  let sc = '';
+  if (local >= 7.7 && local < 10.4) {
+    const which = ['ui.cA', 'ui.cB', 'ui.cC'][Math.min(2, Math.floor((local - 7.7) / 0.9))];
+    sc = `${L['ui.scanning']} ${L[which]}…`;
+  } else if (local >= 10.4 && local < 11.6) sc = L['ui.analyzing'];
+  else if (done) sc = `<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="color:#0E9A5B">${L['ui.sent']}</span>`;
+  scan.innerHTML = sc;
+  // history rows
+  histRows.forEach((r, i) => {
+    if (r.nw) {
+      const at = 11.9 + (2 - i) * .22;
+      const p = E.out(prog(local, at, at + .4));
+      r.el.style.display = p > 0 ? '' : 'none';
+      r.el.style.opacity = p;
+      r.el.style.transform = `translateX(${-SX * (1 - p) * 40}px)`;
+      r.el.classList.toggle('hl', local > at && local < 15.5);
+    }
+  });
+  // captions focus
+  ['#cap0', '#cap1', '#cap2'].forEach((id, i) => {
+    const on = [0, 6.6, 11.8][i], off = [6.6, 11.8, 99][i];
+    const f = prog(local, on, on + .3) - prog(local, off, off + .3) * .65;
+    $(id).querySelector('.tx').style.opacity = .35 + .65 * clamp(f);
+    $(id).querySelector('.no').style.background = f > .5 ? 'var(--b500)' : 'rgba(46,107,255,.3)';
+  });
+  // gentle camera push at the end
+  const cam = E.inOut(prog(local, 13.4, 17.6));
+  $('#s5 .split').style.transform = `scale(${1 + cam * .035})`;
+  // cursor
+  const vis = local >= 1.2 && local < 15.2;
+  cursor.style.display = vis ? 'block' : 'none';
+  ripple.style.display = 'none';
+  if (vis) {
+    let pos = PATH[0].at();
+    for (let i = 0; i < PATH.length - 1; i++) {
+      const a = PATH[i], b = PATH[i + 1];
+      if (local >= a.t && local <= b.t) { const p = E.inOut(prog(local, a.t, b.t)); const A = a.at(), B = b.at(); pos = { x: lerp(A.x, B.x, p), y: lerp(A.y, B.y, p) }; break; }
+      if (local > b.t) pos = b.at();
+    }
+    const appear = E.out(prog(local, 1.2, 1.5)) * (1 - prog(local, 14.8, 15.2));
+    let press = 0;
+    CLICKS.forEach(c => { press = Math.max(press, Math.sin(Math.PI * prog(local, c - .05, c + .15))); });
+    cursor.style.opacity = appear;
+    cursor.style.transform = `translate(${pos.x - 8}px, ${pos.y - 4}px) scale(${1 - press * .18})`;
+    cursor.style.transformOrigin = '8px 4px';
+    CLICKS.forEach(c => {
+      const rp = prog(local, c, c + .45);
+      if (rp > 0 && rp < 1) {
+        ripple.style.display = 'block';
+        ripple.style.left = pos.x + 'px'; ripple.style.top = pos.y + 'px';
+        ripple.style.transform = `scale(${lerp(.3, 1.3, E.out(rp))})`;
+        ripple.style.opacity = 1 - rp;
+      }
+    });
+  }
+};
+
+/* --- S6 report --- */
+const secs = [...document.querySelectorAll('#bubble .sec')];
+const SEC_AT = [1.75, 2.2, 4.3, 6.4, 8.5];
+let secH = null;
+custom.s6 = (local, t) => {
+  if (!secH) secH = secs.map(s => { s.style.height = 'auto'; return s.scrollHeight; });
+  const ph = $('#phone');
+  const pp = E.out(prog(local, 0.1, 0.9));
+  ph.style.transform = `translateY(${(1 - pp) * 260}px) rotate(${(1 - pp) * SX * -6}deg)`;
+  ph.style.opacity = clamp(pp * 2);
+  const typing = $('#typing');
+  typing.style.display = local >= 0.8 && local < 1.7 ? 'inline-flex' : 'none';
+  [...typing.children].forEach((d, i) => d.style.transform = `translateY(${Math.sin(t * 10 - i * .9) * 3}px)`);
+  const bub = $('#bubble');
+  const bp = E.back(prog(local, 1.7, 2.1));
+  bub.style.display = local >= 1.7 ? 'block' : 'none';
+  bub.style.transform = `scale(${lerp(.85, 1, bp)})`;
+  bub.style.transformOrigin = RTL ? 'top right' : 'top left';
+  secs.forEach((s, i) => {
+    const p = E.out(prog(local, SEC_AT[i], SEC_AT[i] + .45));
+    s.style.height = secH[i] * p + 'px';
+    s.style.opacity = p;
+    const hl = i > 0 ? clamp(prog(local, SEC_AT[i], SEC_AT[i] + .3) - prog(local, SEC_AT[i] + 1.8, SEC_AT[i] + 2.1)) : 0;
+    s.firstElementChild.style.background = `rgba(46,107,255,${hl * .12})`;
+  });
+  ['#rc0', '#rc1', '#rc2', '#rc3'].forEach((id, i) => {
+    const at = SEC_AT[i + 1];
+    const f = clamp(prog(local, at, at + .3) - prog(local, at + 2.1, at + 2.4) * .5);
+    const el = $(id);
+    el.querySelector('.no').style.background = `rgba(46,107,255,${.2 + .8 * (f > .55 ? 1 : 0)})`;
+    el.querySelector('.no').style.color = f > .55 ? '#fff' : 'var(--b300)';
+  });
+};
+
+/* --- S7 --- */
+custom.s7 = () => {};
+
+/* --- S8 --- */
+custom.s8 = (local, t) => {
+  drawLockup(local, $('#m2-rect'), $('#m2-peak'), $('#s8-word'), 0.2);
+  const end = prog(local, 5.3, 6.0);
+  $('#fadeout').style.opacity = E.inOut(end);
+};
+
+/* ============ master render ============ */
+function renderAt(t) {
+  t = clamp(t, 0, DUR - 1e-4);
+  scenes.forEach((s, i) => {
+    const next = scenes[i + 1];
+    const visEnd = next ? s.end + WIPE : DUR;
+    const vis = t >= s.start && t < visEnd;
+    s.el.style.display = vis ? 'block' : 'none';
+    if (!vis) return;
+    const local = t - s.start;
+    // wipe in (every scene after the first)
+    if (i > 0) {
+      const w = E.inOut(prog(local, 0, WIPE));
+      const cut = (1 - w) * 100;
+      s.el.style.clipPath = w >= 1 ? 'none' : (RTL ? `inset(0 ${cut}% 0 0)` : `inset(0 0 0 ${cut}%)`);
+      s.edge.style.display = w > 0 && w < 1 ? 'block' : 'none';
+      const ex = (cut / 100) * 1920;
+      s.edge.style.left = (RTL ? 1920 - ex - 18 : ex) + 'px';
+    }
+    bgMotion(s, t);
+    s.ins.forEach(({ n, at, fx }) => applyFx(n, at, fx, local));
+    const fn = custom[s.el.id];
+    if (fn) { try { fn(local, t); } catch (e) { console.error(s.el.id, e.message, e.stack); } }
+  });
+  $('#progress').style.width = (t / DUR * 100) + '%';
+  if (t < 66.9) $('#fadeout').style.opacity = 0;
+}
+window.renderAt = renderAt;
+window.DUR = DUR; window.FPS = FPS;
+
+/* ============ preview player ============ */
+function fit() {
+  const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+  stage.style.transform = `scale(${k})`;
+}
+window.addEventListener('resize', fit);
+window.ready = document.fonts.ready.then(() => { fit(); renderAt(0); return true; });
+if (!Q.has('render')) {
+  let t0 = null, paused = false, cur = +(Q.get('t') || 0);
+  const loop = now => {
+    if (t0 === null) t0 = now - cur * 1000;
+    if (!paused) { cur = ((now - t0) / 1000) % DUR; renderAt(cur); }
+    requestAnimationFrame(loop);
+  };
+  window.ready.then(() => requestAnimationFrame(loop));
+  addEventListener('keydown', e => {
+    if (e.code === 'Space') { paused = !paused; if (!paused) t0 = performance.now() - cur * 1000; }
+    if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') { cur = clamp(cur + (e.code === 'ArrowRight' ? 2 : -2), 0, DUR); t0 = performance.now() - cur * 1000; renderAt(cur); }
+  });
+  stage.addEventListener('click', e => { const r = stage.getBoundingClientRect(); cur = (e.clientX - r.left) / r.width * DUR; t0 = performance.now() - cur * 1000; });
+}
+</script>
+</body>
+</html>
