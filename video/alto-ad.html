@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alto Reel Ad</title>
+<link rel="stylesheet" href="fonts/heebo.css">
+<style>
+/*
+  1080×1920 Reel. Everything lives inside the centred 4:5 box (1080×1350, y 285–1635) so a feed crop
+  loses nothing. Text, headlines and the CTA stay in y 300–1240, clear of the Reels UI that covers
+  the bottom 35% of the screen; only visuals (dashboard, phone, ad cards) extend lower.
+*/
+:root{
+  --n950:#030A1C; --n900:#061433; --n800:#0A1E4A; --n700:#123070;
+  --b500:#2E6BFF; --b400:#4F86FF; --b300:#8DB0FF; --b100:#DCE7FF;
+  --mist:#EEF3FC; --line:#D5DFF0; --ink:#0A1E4A; --muted:#5C6F93; --ok:#0E9A5B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:var(--n950);overflow:hidden}
+body{font-family:'Heebo',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;flex:none;background:var(--n900)}
+.scene{position:absolute;inset:0;display:none;overflow:hidden}
+.bg{position:absolute;inset:0}
+.navy .bg{background:radial-gradient(900px 900px at 80% 25%,#123A8C 0%,rgba(18,58,140,0) 60%),linear-gradient(170deg,var(--n800) 0%,var(--n900) 55%,var(--n950) 100%)}
+.navy .bg::after{content:"";position:absolute;inset:-40px;background-image:radial-gradient(rgba(141,176,255,.16) 1.6px,transparent 1.8px);background-size:44px 44px;transform:translate(var(--gx,0),var(--gy,0))}
+.blue .bg{background:linear-gradient(160deg,#3A78FF,#1F4FD6)}
+.white .bg{background:linear-gradient(180deg,#fff,#EEF3FC)}
+.white{color:var(--ink)}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55}
+.orb.a{width:700px;height:700px;background:#1F56E0}
+.orb.b{width:560px;height:560px;background:#0E3CA8}
+.edge{position:absolute;left:0;right:0;height:22px;background:linear-gradient(90deg,var(--b400),var(--b500));box-shadow:0 0 50px 8px rgba(46,107,255,.6);display:none;z-index:50}
+/* the 4:5 box and the text-safe band inside it */
+.box{position:absolute;left:0;top:285px;width:1080px;height:1350px}
+.safe{position:absolute;left:60px;right:60px;top:15px;height:940px}
+.mask{overflow:hidden;display:block;padding-bottom:.1em}
+.mask>span{display:inline-block}
+.center{text-align:center}
+.kicker{display:inline-flex;align-items:center;gap:12px;font-size:36px;font-weight:700;color:var(--b300)}
+.kicker::before{content:"";width:40px;height:5px;border-radius:3px;background:currentColor}
+.white .kicker{color:var(--b500)}
+.accent{color:var(--b400)}
+.lockup{display:flex;align-items:center;justify-content:center;gap:30px;direction:ltr}
+.lockup svg{width:130px;height:130px;overflow:visible}
+.lockup path,.lockup rect{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round}
+.word{display:flex;font-size:140px;font-weight:900;letter-spacing:.06em;line-height:1;overflow:hidden;padding-bottom:.04em}
+.word span{display:inline-block}
+
+/* H1 hook */
+#h1 .safe{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+#h1 h1{font-size:104px;font-weight:900;line-height:1.02}
+#h1 .stamp{margin-top:34px;font-size:170px;font-weight:900;color:var(--b400);line-height:1}
+.adcard{position:absolute;width:250px;background:#fff;border-radius:20px;color:var(--ink);box-shadow:0 30px 60px rgba(0,0,0,.4);padding:14px}
+.adcard .h{display:flex;align-items:center;gap:9px}
+.adcard .av{width:34px;height:34px;border-radius:50%;flex:none}
+.adcard .nm{font-weight:800;font-size:17px}
+.adcard .sp{font-size:12px;color:var(--muted)}
+.adcard .media{margin-top:10px;height:150px;border-radius:12px;position:relative}
+.adcard .ln{height:9px;border-radius:5px;background:#E3E9F4;margin-top:10px}
+.adcard .ai{position:absolute;top:-16px;left:-14px;background:var(--b500);color:#fff;font-weight:800;font-size:18px;padding:6px 14px;border-radius:999px;box-shadow:0 8px 20px rgba(46,107,255,.5);direction:ltr}
+
+/* H2 agency */
+#h2 .safe{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+#h2 .tag{margin-top:46px;font-size:46px;font-weight:600;color:var(--b100)}
+#h2 h2{margin-top:22px;font-size:76px;font-weight:900;line-height:1.08}
+.spark{display:inline-flex;align-items:center;justify-content:center;width:120px;height:120px;border-radius:34px;background:var(--b500);margin-top:46px;box-shadow:0 20px 60px rgba(46,107,255,.55)}
+.spark svg{width:70px;height:70px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linejoin:round}
+
+/* H3 dashboard */
+#h3 .head{position:absolute;left:60px;right:60px;top:30px;text-align:center}
+#h3 h2,#h4 h2{font-size:92px;font-weight:900;line-height:1.04;margin-top:12px}
+.browser{position:absolute;left:70px;top:390px;width:940px;border-radius:26px;background:#F4F7FC;color:var(--ink);overflow:hidden;box-shadow:0 50px 100px rgba(0,0,0,.55)}
+.chrome{height:46px;background:#E6ECF6;display:flex;align-items:center;gap:9px;padding:0 20px;direction:ltr}
+.chrome i{width:13px;height:13px;border-radius:50%;background:#C5CFE0}
+.dash{padding:26px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-bottom:20px}
+.card h4{display:flex;align-items:center;justify-content:space-between;font-size:28px;font-weight:800}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:58px;padding:0 28px;border-radius:14px;font-weight:800;font-size:24px;background:var(--n800);color:#fff;min-width:190px}
+.pbar{height:12px;border-radius:6px;background:#E6ECF6;margin-top:22px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--b500),var(--b400))}
+.scan{margin-top:14px;font-size:22px;font-weight:700;color:var(--b500);height:30px;display:flex;align-items:center;gap:8px}
+.scan svg{width:26px;height:26px;stroke:var(--ok);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.row{display:flex;align-items:center;justify-content:space-between;padding:16px 4px;border-bottom:1px solid #EDF1F8;font-size:24px}
+.row b{font-weight:800}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:20px;font-weight:800;background:var(--b100);color:var(--b500)}
+#cursor{position:absolute;width:56px;height:56px;z-index:60;display:none}
+#cursor svg{width:56px;height:56px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.4))}
+
+/* H4 report */
+#h4 .head{position:absolute;left:60px;right:60px;top:30px;text-align:center}
+#h4 .sub{font-size:40px;color:var(--b100);margin-top:16px;font-weight:500}
+.phone{position:absolute;left:290px;top:430px;width:500px;height:1020px;border-radius:70px;background:#020817;padding:18px;box-shadow:0 60px 120px rgba(0,0,0,.6),0 0 0 2px rgba(141,176,255,.25)}
+.scr{width:100%;height:100%;border-radius:54px;overflow:hidden;background:#E9EEF6;color:var(--ink)}
+.chat-h{height:150px;background:var(--n800);display:flex;align-items:flex-end;gap:14px;padding:0 24px 20px;color:#fff}
+.chat-h .av{width:58px;height:58px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.chat-h .av svg{width:38px;height:38px}
+.chat-h b{display:block;font-size:23px}
+.chat-h small{font-size:16px;color:var(--b300)}
+.chat-b{padding:24px 18px}
+.bubble{background:#fff;border-radius:22px;border-start-start-radius:4px;padding:18px 20px 12px;font-size:20px;line-height:1.42;box-shadow:0 2px 6px rgba(10,30,74,.08)}
+.sec{overflow:hidden}
+.sec>div{padding-bottom:10px}
+.bubble .rh{font-weight:800;font-size:22px}
+.bubble .st{font-weight:800;color:var(--b500);font-size:18px}
+.bubble li{list-style:none;position:relative;padding-inline-start:18px}
+.bubble li::before{content:"";position:absolute;inset-inline-start:2px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--b500)}
+
+/* H5 slams */
+#h5 .slam{position:absolute;inset:0;display:none}
+#h5 .slam .safe{display:flex;align-items:center;justify-content:center;text-align:center}
+#h5 .slam h1{font-size:150px;font-weight:900;line-height:1.02}
+
+/* H6 CTA */
+#h6 .safe{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#h6 h2{font-size:92px;font-weight:900;line-height:1.06;margin-top:56px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:34px;max-width:900px}
+.chip{padding:12px 24px;border-radius:999px;border:2px solid rgba(141,176,255,.45);background:rgba(255,255,255,.07);font-size:30px;font-weight:700}
+.cta{margin-top:50px;display:inline-flex;align-items:center;gap:20px;height:120px;padding:0 60px;border-radius:999px;background:#fff;color:var(--ink);font-size:52px;font-weight:900;box-shadow:0 20px 60px rgba(46,107,255,.55)}
+.cta svg{width:46px;height:46px;stroke:var(--b500);fill:none;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.cta-sub{margin-top:24px;font-size:32px;color:var(--b100)}
+#guides{position:absolute;inset:0;z-index:99;pointer-events:none;display:none}
+#guides div{position:absolute;left:0;right:0;border:3px dashed}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="mark" viewBox="0 0 120 120">
+    <rect x="6" y="6" width="108" height="108" rx="30" fill="none" stroke="currentColor" stroke-width="8"/>
+    <path d="M26 86 L50 50 L62 66 L80 40 L96 86" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</defs></svg>
+
+<!-- H1 · Hook -->
+<section class="scene navy" id="h1" data-start="0" data-end="2.6">
+  <div class="bg"></div>
+  <div class="box"><div id="h1-cards"></div>
+    <div class="safe">
+      <h1><span class="mask"><span data-in="0.05" data-fx="rise">המתחרים שלכם</span></span>
+          <span class="mask"><span data-in="0.2" data-fx="rise">כבר עובדים עם AI.</span></span></h1>
+      <div class="stamp" data-in="1.25" data-fx="slam">ואתם?</div>
+    </div>
+  </div>
+</section>
+
+<!-- H2 · Who we are -->
+<section class="scene navy" id="h2" data-start="2.6" data-end="5.2">
+  <div class="bg"></div>
+  <div class="box"><div class="safe">
+    <div class="lockup">
+      <svg viewBox="0 0 120 120"><rect id="m-rect" x="6" y="6" width="108" height="108" rx="30" stroke-width="8"/><path id="m-peak" d="M26 86 L50 50 L62 66 L80 40 L96 86" stroke-width="8"/></svg>
+      <div class="word" id="h2-word"><span>A</span><span>L</span><span>T</span><span>O</span></div>
+    </div>
+    <div class="tag" data-in="0.55" data-fx="up">חברת פרסום דיגיטלי</div>
+    <h2><span class="mask"><span data-in="0.8" data-fx="rise">שדוחפת את הלקוחות שלה</span></span>
+        <span class="mask"><span class="accent" data-in="0.95" data-fx="rise">קדימה עם AI</span></span></h2>
+    <div class="spark" data-in="1.3" data-fx="pop"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.2 5.6 5.8 2.2-5.8 2.2L12 18l-2.2-5.5L4 10.3l5.8-2.2z"/><path d="M19 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></div>
+  </div></div>
+</section>
+
+<!-- H3 · Dashboard -->
+<section class="scene navy" id="h3" data-start="5.2" data-end="9.0">
+  <div class="bg"></div>
+  <div class="box">
+    <div class="head">
+      <div class="kicker" data-in="0.1" data-fx="up">כל לקוח שלנו מקבל</div>
+      <h2><span class="mask"><span data-in="0.2" data-fx="rise">דשבורד מודיעין</span></span><span class="mask"><span class="accent" data-in="0.32" data-fx="rise">מתחרים</span></span></h2>
+    </div>
+    <div class="browser" data-in="0.35" data-fx="up">
+      <div class="chrome"><i></i><i></i><i></i></div>
+      <div class="dash">
+        <div class="card">
+          <h4><span>סטטוס סוכן</span><span class="btn" id="btn-run">הפעל סוכן</span></h4>
+          <div class="pbar"><i id="pbar"></i></div>
+          <div class="scan" id="scan"></div>
+        </div>
+        <div class="card">
+          <h4><span>מה השתנה השבוע</span></h4>
+          <div class="row" data-row="0"><b>מתחרה א׳</b><span class="pill">+3 מודעות חדשות</span></div>
+          <div class="row" data-row="1"><b>מתחרה ב׳</b><span class="pill">+2 מודעות חדשות</span></div>
+          <div class="row" data-row="2" style="border:0"><b>מתחרה ג׳</b><span class="pill">הצעה חדשה</span></div>
+        </div>
+      </div>
+    </div>
+    <div id="cursor"><svg viewBox="0 0 40 40"><path d="M8 4 L8 32 L15.5 25 L20.5 36 L25.5 33.8 L20.6 23 L31 23 Z" fill="#fff" stroke="#0A1E4A" stroke-width="2.4" stroke-linejoin="round"/></svg></div>
+  </div>
+</section>
+
+<!-- H4 · WhatsApp report -->
+<section class="scene navy" id="h4" data-start="9.0" data-end="12.4">
+  <div class="bg"></div>
+  <div class="box">
+    <div class="head">
+      <h2><span class="mask"><span data-in="0.1" data-fx="rise">דו״ח AI שבועי</span></span><span class="mask"><span class="accent" data-in="0.22" data-fx="rise">ישר לוואטסאפ</span></span></h2>
+      <div class="sub" data-in="0.45" data-fx="up">מה המתחרים עשו – ומה עושים עכשיו</div>
+    </div>
+    <div class="phone" id="phone"><div class="scr">
+      <div class="chat-h"><div class="av"><svg style="color:#0A1E4A"><use href="#mark"/></svg></div><div><b>Alto · מחקר מתחרים</b><small>סוכן Alto</small></div></div>
+      <div class="chat-b"><div class="bubble" id="bubble">
+        <div class="sec"><div class="rh">דו״ח שבועי – המותג שלכם</div></div>
+        <div class="sec"><div>מתחרה א׳ העלה 3 מודעות חדשות סביב הנחה לזמן מוגבל.</div></div>
+        <div class="sec"><div><div class="st">תובנות מרכזיות</div><ul><li>משחקים על דחיפות: ״רק השבוע״</li><li>נשענים על סרטוני וידאו קצרים</li></ul></div></div>
+        <div class="sec"><div><div class="st">המלצות לפעולה</div><ul><li>להשיק הצעת נגד עוד השבוע</li><li>לרענן את מודעת הווידאו המובילה</li></ul></div></div>
+      </div></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- H5 · Slams -->
+<section class="scene" id="h5" data-start="12.4" data-end="14.8">
+  <div class="slam navy" data-at="0"><div class="bg"></div><div class="box"><div class="safe"><h1>פרסום<br>ממומן.</h1></div></div></div>
+  <div class="slam blue" data-at="0.8"><div class="bg"></div><div class="box"><div class="safe"><h1>פתרונות<br>AI.</h1></div></div></div>
+  <div class="slam white" data-at="1.6"><div class="bg"></div><div class="box"><div class="safe"><h1>תמיד צעד<br>לפני.</h1></div></div></div>
+</section>
+
+<!-- H6 · CTA -->
+<section class="scene navy" id="h6" data-start="14.8" data-end="18.5">
+  <div class="bg"></div>
+  <div class="box"><div class="safe">
+    <div class="lockup" data-in="0.05" data-fx="pop" style="gap:20px"><svg viewBox="0 0 120 120" style="width:96px;height:96px;color:#fff"><use href="#mark"/></svg><div class="word" style="font-size:104px">ALTO</div></div>
+    <h2><span class="mask"><span data-in="0.2" data-fx="rise">רוצים להיות</span></span><span class="mask"><span class="accent" data-in="0.32" data-fx="rise">צעד לפני המתחרים?</span></span></h2>
+    <div class="chips">
+      <span class="chip" data-in="0.55" data-fx="pop">ניהול קמפיינים</span>
+      <span class="chip" data-in="0.65" data-fx="pop">פתרונות AI</span>
+      <span class="chip" data-in="0.75" data-fx="pop">דשבורד מתחרים</span>
+    </div>
+    <div class="cta" id="cta" data-in="0.95" data-fx="pop">השאירו פרטים<svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></div>
+    <div class="cta-sub" data-in="1.2" data-fx="up">ונחזור אליכם עוד היום</div>
+  </div></div>
+</section>
+
+<div id="guides"><div style="top:285px;height:1350px;border-color:#22C77A"></div><div style="top:300px;height:940px;border-color:#FFB020"></div></div>
+</div></div>
+
+<script>
+const Q = new URLSearchParams(location.search);
+const DUR = 18.5;
+window.STAGE = { w: 1080, h: 1920 };
+const $ = s => document.querySelector(s);
+const stage = $('#stage');
+if (Q.has('guides')) $('#guides').style.display = 'block';
+
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, p) => a + (b - a) * p;
+const E = {
+  out: p => 1 - Math.pow(1 - p, 3), out5: p => 1 - Math.pow(1 - p, 5),
+  inOut: p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2,
+  back: p => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+};
+
+const scenes = [...document.querySelectorAll('.scene')].map((el, i) => {
+  const s = { el, start: +el.dataset.start, end: +el.dataset.end, ins: [...el.querySelectorAll('[data-in]')].map(n => ({ n, at: +n.dataset.in, fx: n.dataset.fx })) };
+  el.style.zIndex = 10 + i;
+  el.querySelectorAll('.navy > .bg, .scene.navy > .bg').forEach(bg => bg.insertAdjacentHTML('beforeend', '<div class="orb a"></div><div class="orb b"></div>'));
+  if (i > 0) { s.edge = document.createElement('div'); s.edge.className = 'edge'; el.appendChild(s.edge); }
+  return s;
+});
+const WIPE = 0.3;
+
+function fx(n, at, type, local) {
+  const raw = prog(local, at, at + (type === 'rise' ? 0.45 : 0.4));
+  let o = 1, tf = '';
+  if (type === 'rise') tf = `translateY(${(1 - E.out5(raw)) * 115}%)`;
+  else if (type === 'pop') { o = clamp(raw * 3); tf = `scale(${lerp(.55, 1, E.back(raw))})`; }
+  else if (type === 'slam') { o = clamp(raw * 4); tf = `scale(${lerp(2.2, 1, E.out5(raw))}) rotate(${(1 - E.out(raw)) * -6}deg)`; }
+  else { o = clamp(raw * 1.6); tf = `translateY(${(1 - E.out(raw)) * 50}px)`; }
+  n.style.opacity = o; n.style.transform = tf;
+}
+
+function bgMotion(root, t) {
+  root.querySelectorAll('.bg').forEach(bg => {
+    bg.style.setProperty('--gx', `${(t * 8) % 44}px`); bg.style.setProperty('--gy', `${(t * 5) % 44}px`);
+    const a = bg.querySelector('.orb.a'), b = bg.querySelector('.orb.b');
+    if (a) { a.style.left = `${380 + Math.sin(t * .6) * 260}px`; a.style.top = `${200 + Math.cos(t * .5) * 160}px`; }
+    if (b) { b.style.left = `${-160 + Math.cos(t * .5) * 160}px`; b.style.top = `${1150 + Math.sin(t * .7) * 200}px`; }
+  });
+}
+
+/* H1 cards (x,y inside the 4:5 box) */
+const cards = [
+  { x: 30, y: 1040, r: -9, g: ['#2E6BFF', '#0A1E4A'], av: '#2E6BFF', n: 'מתחרה א׳' },
+  { x: 290, y: 990, r: -3, g: ['#8DB0FF', '#2E6BFF'], av: '#0A1E4A', n: 'מתחרה ב׳' },
+  { x: 545, y: 1000, r: 4, g: ['#123070', '#4F86FF'], av: '#4F86FF', n: 'מתחרה ג׳' },
+  { x: 800, y: 1050, r: 9, g: ['#0A1E4A', '#8DB0FF'], av: '#2E6BFF', n: 'מתחרה א׳' },
+];
+cards.forEach(c => {
+  const el = document.createElement('div');
+  el.className = 'adcard'; el.style.left = c.x + 'px'; el.style.top = c.y + 'px';
+  el.innerHTML = `<div class="h"><div class="av" style="background:${c.av}"></div><div><div class="nm">${c.n}</div><div class="sp">ממומן</div></div></div><div class="media" style="background:linear-gradient(135deg,${c.g[0]},${c.g[1]})"></div><div class="ln" style="width:90%"></div><div class="ln" style="width:60%"></div><div class="ai">AI ✦</div>`;
+  $('#h1-cards').appendChild(el); c.el = el;
+});
+
+const RLEN = 381, PLEN = 144;
+$('#m-rect').style.strokeDasharray = RLEN; $('#m-peak').style.strokeDasharray = PLEN;
+
+const custom = {
+  h1(local, t) {
+    cards.forEach((c, i) => {
+      const at = 0.1 + i * 0.12, raw = prog(local, at, at + .4), p = E.back(raw);
+      const dim = E.inOut(prog(local, 1.1, 1.4));
+      c.el.style.opacity = clamp(raw * 3) * (1 - dim * .55);
+      c.el.style.transform = `translateY(${Math.sin(t * 2 + i) * 10 + (1 - p) * 90}px) rotate(${c.r}deg) scale(${lerp(.5, 1, p)})`;
+    });
+  },
+  h2(local) {
+    $('#m-rect').style.strokeDashoffset = RLEN * (1 - E.inOut(prog(local, 0.05, 0.55)));
+    $('#m-peak').style.strokeDashoffset = PLEN * (1 - E.out(prog(local, 0.25, 0.7)));
+    [...$('#h2-word').children].forEach((c, i) => c.style.transform = `translateY(${(1 - E.out5(prog(local, .25 + i * .05, .7 + i * .05))) * 105}%)`);
+  },
+  h3(local, t) {
+    const btn = $('#btn-run'), click = 1.2;
+    const running = local >= click && local < 2.7;
+    btn.textContent = running ? 'רץ כעת...' : 'הפעל סוכן';
+    btn.style.opacity = running ? .6 : 1;
+    btn.style.transform = `scale(${1 - .08 * Math.sin(Math.PI * prog(local, click - .05, click + .2))})`;
+    $('#pbar').style.width = E.inOut(prog(local, click + .05, 2.6)) * 100 + '%';
+    const names = ['מתחרה א׳', 'מתחרה ב׳', 'מתחרה ג׳'];
+    $('#scan').innerHTML = local < click ? '' : local < 2.7 ? `סורק את ${names[Math.min(2, Math.floor((local - click) / .5))]}…`
+      : '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span style="color:#0E9A5B">הדו״ח נשלח לוואטסאפ</span>';
+    document.querySelectorAll('#h3 .row').forEach((r, i) => {
+      const p = E.back(prog(local, 2.75 + i * .15, 3.1 + i * .15));
+      r.style.opacity = clamp(prog(local, 2.75 + i * .15, 2.95 + i * .15)); r.style.transform = `scale(${lerp(.85, 1, p)})`;
+    });
+    // cursor: slides in from the lower edge to the run button, clicks, leaves
+    const cur = $('#cursor'), sr = stage.getBoundingClientRect(), k = sr.width / 1080;
+    const r = btn.getBoundingClientRect(), box = $('#h3 .box').getBoundingClientRect();
+    const tx = (r.left - box.left + r.width * .5) / k, ty = (r.top - box.top + r.height * .55) / k;
+    const p = E.inOut(prog(local, 0.55, 1.15));
+    cur.style.display = local > 0.5 && local < 2.4 ? 'block' : 'none';
+    const press = Math.sin(Math.PI * prog(local, click - .05, click + .15));
+    cur.style.transform = `translate(${lerp(tx + 260, tx, p) - 10}px, ${lerp(ty + 500, ty, p) - 6}px) scale(${1 - press * .18})`;
+    cur.style.opacity = 1 - prog(local, 2.1, 2.4);
+  },
+  h4(local) {
+    const ph = $('#phone'), pp = E.out(prog(local, 0.2, 0.75));
+    ph.style.transform = `translateY(${(1 - pp) * 420}px)`; ph.style.opacity = clamp(pp * 2);
+    if (!custom.secH) custom.secH = [...document.querySelectorAll('#bubble .sec')].map(s => { s.style.height = 'auto'; return s.scrollHeight; });
+    const bub = $('#bubble'); bub.style.opacity = clamp(prog(local, .8, .95));
+    document.querySelectorAll('#bubble .sec').forEach((s, i) => {
+      const p = E.out(prog(local, .85 + i * .45, 1.2 + i * .45));
+      s.style.height = custom.secH[i] * p + 'px'; s.style.opacity = p;
+    });
+  },
+  h5(local) {
+    document.querySelectorAll('#h5 .slam').forEach((sl, i, all) => {
+      const at = +sl.dataset.at, next = all[i + 1] ? +all[i + 1].dataset.at : 9;
+      const vis = local >= at && local < next;
+      sl.style.display = vis ? 'block' : 'none';
+      if (vis) {
+        const p = E.out5(prog(local, at, at + .3));
+        const h = sl.querySelector('h1');
+        h.style.transform = `scale(${lerp(1.6, 1, p) + (local - at) * .04})`; h.style.opacity = clamp(p * 2);
+      }
+    });
+  },
+  h6(local, t) {
+    const pulse = local > 1.4 ? 1 + .045 * Math.sin((local - 1.4) * 6) : 1;
+    const c = $('#cta'); c.style.transform += ` scale(${pulse})`;
+    c.querySelector('svg').style.transform = `translateX(${local > 1.4 ? -Math.abs(Math.sin((local - 1.4) * 6)) * 10 : 0}px)`;
+  },
+};
+
+function renderAt(t) {
+  t = clamp(t, 0, DUR - 1e-4);
+  scenes.forEach((s, i) => {
+    const vis = t >= s.start && t < (scenes[i + 1] ? s.end + WIPE : DUR);
+    s.el.style.display = vis ? 'block' : 'none';
+    if (!vis) return;
+    const local = t - s.start;
+    if (s.edge) {
+      const w = E.inOut(prog(local, 0, WIPE)), cut = (1 - w) * 100;
+      s.el.style.clipPath = w >= 1 ? 'none' : `inset(${cut}% 0 0 0)`;   // wipes up from the bottom
+      s.edge.style.display = w > 0 && w < 1 ? 'block' : 'none';
+      s.edge.style.top = (cut / 100 * 1920 - 11) + 'px';
+    }
+    bgMotion(s.el, t);
+    s.ins.forEach(({ n, at, fx: f }) => fx(n, at, f, local));
+    if (custom[s.el.id]) custom[s.el.id](local, t);
+  });
+}
+window.renderAt = renderAt; window.DUR = DUR;
+
+function fit() { const k = Math.min(innerWidth / 1080, innerHeight / 1920); stage.style.transform = `scale(${k})`; }
+addEventListener('resize', fit);
+window.ready = document.fonts.ready.then(() => { fit(); renderAt(0); return true; });
+if (!Q.has('render')) {
+  let t0 = null, cur = +(Q.get('t') || 0), paused = false;
+  const loop = now => { if (t0 === null) t0 = now - cur * 1000; if (!paused) { cur = ((now - t0) / 1000) % DUR; renderAt(cur); } requestAnimationFrame(loop); };
+  window.ready.then(() => requestAnimationFrame(loop));
+  addEventListener('keydown', e => { if (e.code === 'Space') { paused = !paused; if (!paused) t0 = performance.now() - cur * 1000; } });
+}
+</script>
+</body>
+</html>

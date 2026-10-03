@@ -8,6 +8,7 @@
  *   node render.js --stills 2,15,40  # just grab PNG stills at those seconds
  *
  * Options: --fps 30  --chrome /path/to/chrome  --workers 4  --audio music.mp3
+ *          --page other.html --query "format=feed" --name out-file-prefix
  */
 const { chromium } = require('playwright-core');
 const { spawn } = require('child_process');
@@ -23,13 +24,21 @@ const FPS = +(args.fps || 30);
 const WORKERS = +(args.workers || 4);
 const OUT_DIR = path.join(__dirname, 'out');
 const CHROME = args.chrome || process.env.CHROME_PATH || undefined;
-const PAGE = 'file://' + path.join(__dirname, 'alto-explainer.html') + `?render=1&lang=${LANG}`;
+const PAGE_FILE = args.page || 'alto-explainer.html';
+const NAME = args.name || 'alto-dashboard';
+const PAGE = 'file://' + path.join(__dirname, PAGE_FILE) + `?render=1&lang=${LANG}` + (args.query ? '&' + args.query : '');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 async function openPage(browser) {
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   await page.goto(PAGE);
   await page.evaluate(() => window.ready);
+  // pages may declare their own frame size (e.g. vertical ads)
+  const size = await page.evaluate(() => window.STAGE || { w: 1920, h: 1080 });
+  if (size.w !== 1920 || size.h !== 1080) {
+    await page.setViewportSize({ width: size.w, height: size.h });
+    await page.evaluate(() => window.dispatchEvent(new Event('resize')));
+  }
   return page;
 }
 
@@ -61,7 +70,7 @@ async function renderChunk(browser, from, to, file) {
     const page = await openPage(browser);
     for (const s of String(args.stills).split(',')) {
       await page.evaluate(t => window.renderAt(t), +s);
-      const f = path.join(OUT_DIR, `still-${LANG}-${s}.png`);
+      const f = path.join(OUT_DIR, `still-${NAME}-${LANG}-${s}.png`);
       await page.screenshot({ path: f });
       console.log(f);
     }
@@ -75,15 +84,15 @@ async function renderChunk(browser, from, to, file) {
   const parts = [];
   await Promise.all(Array.from({ length: WORKERS }, (_, i) => {
     const from = i * per, to = Math.min(total, from + per);
-    const file = path.join(OUT_DIR, `.part-${LANG}-${i}.mp4`);
+    const file = path.join(OUT_DIR, `.part-${NAME}-${LANG}-${i}.mp4`);
     parts.push(file);
     return renderChunk(browser, from, to, file);
   }));
   await browser.close();
 
-  const list = path.join(OUT_DIR, `.parts-${LANG}.txt`);
+  const list = path.join(OUT_DIR, `.parts-${NAME}-${LANG}.txt`);
   fs.writeFileSync(list, parts.map(p => `file '${p}'`).join('\n'));
-  const out = path.join(OUT_DIR, `alto-dashboard-${LANG}.mp4`);
+  const out = path.join(OUT_DIR, `${NAME}-${LANG}.mp4`);
   const audio = args.audio ? ['-i', args.audio, '-map', '0:v', '-map', '1:a', '-c:a', 'aac', '-b:a', '192k', '-shortest'] : [];
   const ff = ffmpeg(['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, ...audio, '-c:v', 'copy', '-movflags', '+faststart', out]);
   ff.stdin.end();

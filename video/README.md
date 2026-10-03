@@ -8,6 +8,8 @@ A ~73-second animated explainer (1920×1080, 30 fps) for clients. It covers what
 | `out/alto-dashboard-he.mp4` | Hebrew version (RTL) |
 | `alto-explainer.html` | The animation source. Open it in a browser to preview (`?lang=he` for Hebrew; Space pauses, ←/→ seeks, click the frame to jump) |
 | `render.js` | Renders the HTML to MP4 frame by frame with headless Chromium and ffmpeg |
+| `out/alto-ad-reel-he.mp4` | 18.5 s Reel ad for Facebook/Instagram (9:16, content kept inside the 4:5 crop). Copy and lead form: `ad-copy.md` |
+| `alto-ad.html` | The ad's animation source (`?guides=1` shows the 4:5 crop and the text-safe area) |
 | `music.py` | Synthesizes the royalty-free background track: 120 BPM upbeat electronic, with whooshes and impacts timed to the scene cuts |
 
 ## Storyboard
@@ -48,5 +50,13 @@ ffmpeg -i out/alto-dashboard-en.mp4 -i out/music.wav -map 0:v -map 1:a -c:v copy
 ```
 
 To use your own track instead, put its file in place of `out/music.wav` in that command. The same applies to a voice-over.
+
+### Re-rendering the ad
+
+```bash
+python3 music.py --dur 18.5 --bpm 128 --drop 0 --build 0 --outro 17.6 \
+  --cuts 2.6,5.2,9,12.4,13.2,14,14.8 --arp-start 0 --out out/music-ad.wav
+node render.js --page alto-ad.html --name alto-ad-reel --lang he --audio out/music-ad.wav
+```
 
 Pass `--chrome /path/to/chrome` if Playwright's bundled browser isn't installed.

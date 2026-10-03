@@ -6,23 +6,37 @@ Synthesizes the background music for the Alto explainer (royalty-free, generated
 Whooshes and impacts land exactly on the video's scene cuts (see SCENE_CUTS).
 
     pip install numpy scipy
-    python3 music.py                 # -> out/music.wav
-    node render.js --lang en --audio out/music.wav
+    python3 music.py                 # -> out/music.wav (explainer)
+    python3 music.py --dur 18.5 --bpm 128 --drop 0 --build 0 --outro 17.6 \
+        --cuts 2.6,5.2,9,12.4,13.2,14,14.8 --out out/music-ad.wav   # (the ad)
 """
 from pathlib import Path
+import argparse
 import wave
 
 import numpy as np
 from scipy.signal import butter, sosfilt
 
+ap = argparse.ArgumentParser()
+ap.add_argument('--dur', type=float, default=73.0)
+ap.add_argument('--bpm', type=float, default=120)
+ap.add_argument('--cuts', default='4.5,11,18,29,47,59,67', help='scene-cut times for whooshes')
+ap.add_argument('--build', type=float, default=4.5, help='hats + soft bass start')
+ap.add_argument('--drop', type=float, default=11.0, help='full beat starts')
+ap.add_argument('--outro', type=float, default=67.0, help='final hit; beat stops')
+ap.add_argument('--arp-start', type=float, default=1.0)
+ap.add_argument('--out', default=str(Path(__file__).parent / 'out' / 'music.wav'))
+A = ap.parse_args()
+
 SR = 44100
-DUR = 73.0
-BPM = 120
+DUR = A.dur
+BPM = A.bpm
 BEAT = 60 / BPM
 STEP = BEAT / 4                     # 16th note
-SCENE_CUTS = [4.5, 11.0, 18.0, 29.0, 47.0, 59.0, 67.0]
-DROP = 11.0                         # full beat comes in with "Introducing the Alto Dashboard"
-OUTRO = 67.0                        # final logo
+SCENE_CUTS = [float(c) for c in A.cuts.split(',') if c]
+BUILD = A.build                     # hats + soft bass come in
+DROP = A.drop                       # full beat (explainer: "Introducing the Alto Dashboard")
+OUTRO = A.outro                     # final logo hit
 
 N = int(SR * DUR)
 t = np.arange(N) / SR
@@ -47,6 +61,8 @@ def bp(x, lo, hi, order=2):
 
 def place(buf, sig, at, gain=1.0):
     i = int(at * SR)
+    if i < 0:
+        sig, i = sig[-i:], 0
     if i >= len(buf):
         return
     j = min(len(buf), i + len(sig))
@@ -104,7 +120,7 @@ pad = lp(pad, 1600)
 # arpeggio: 16th-note plucks over the chord tones
 PATTERN = [0, 1, 2, 3, 2, 1, 2, 3]
 k = 0
-time = 1.0
+time = A.arp_start
 while time < OUTRO:
     c = chord_at(time)
     n = c['arp'][PATTERN[k % 8]]
@@ -129,7 +145,7 @@ while time < OUTRO:
     place(bass, note * env, time)
     time += BEAT / 2
 # softer bass pulse in the build-up
-time = 4.5
+time = BUILD
 while time < DROP:
     s = seg(BEAT)
     f = midi(chord_at(time)['bass'])
@@ -166,7 +182,7 @@ while time < OUTRO:
         kick_times.append(time)
         if beat_i % 2 == 1:
             place(clap, clap_hit(), time)
-    if time >= 4.5:
+    if time >= BUILD:
         place(hats, hat_hit(), time + BEAT / 2, 1.0 if full else 0.6)
         if full:
             place(hats, hat_hit(0.018), time + BEAT / 4, 0.35)
@@ -232,7 +248,7 @@ for i in range(4):
     echo = np.concatenate([np.zeros(d), echo[:-d]]) * 0.38
     (arp_r if i % 2 == 0 else arp_l)[:] += echo
 
-intro_lpf = np.clip((t - 1.0) / 9.0, 0.25, 1.0)   # arp opens up through the build
+intro_lpf = np.clip((t - A.arp_start) / max(0.01, DROP - A.arp_start - 1), 0.25, 1.0) if DROP > A.arp_start else 1.0   # arp opens up through the build
 mix = (
     stereo(pad, 0.3, 11) * 1.1
     + np.stack([arp_l, arp_r]) * 0.75 * intro_lpf
@@ -247,7 +263,7 @@ mix *= fade
 mix = np.tanh(mix * 1.2) / np.tanh(1.2)
 mix /= np.max(np.abs(mix)) / 0.89
 
-out = Path(__file__).parent / 'out' / 'music.wav'
+out = Path(A.out)
 out.parent.mkdir(exist_ok=True)
 pcm = (mix.T * 32767).astype('<i2')
 with wave.open(str(out), 'wb') as w:
