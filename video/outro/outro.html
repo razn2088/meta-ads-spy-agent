@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Alto End Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=block" rel="stylesheet">
+<style>
+/*
+  Alto end card (סגיר) — 1080×1920, 5 s. Brand: brand/BRAND.md.
+  Story: a yellow→orange arrow shoots up and lands as the "l" of alto ("aim high"),
+  the other letters pop in, the tagline types in, then a gradient chevron sweeps the card away.
+*/
+:root{--night:#0E0B26;--navy:#282C51;--or:#F28D35;--ye:#FAED64;--off:#F7F7F7}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--night);font-family:'Heebo',sans-serif}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--night)}
+#glow{position:absolute;inset:0;background:radial-gradient(900px 700px at 50% 108%,rgba(242,141,53,.42),rgba(242,141,53,0) 70%),radial-gradient(700px 600px at 50% 46%,rgba(40,44,81,.95),rgba(40,44,81,0) 70%)}
+#grain{position:absolute;inset:-20px;opacity:.06;background-image:radial-gradient(rgba(247,247,247,.9) 1px,transparent 1.4px);background-size:7px 7px}
+.dot{position:absolute;border-radius:50%;background:linear-gradient(0deg,var(--ye),var(--or))}
+/* logo letters cut from the official wordmark (brand/logos/asset-1@3x.png, 955×445) */
+.ltr{position:absolute;top:760px;height:335px;background:url(../../brand/logos/asset-1@3x.png) no-repeat;background-size:720px 335px;will-change:transform,opacity}
+#shaft{position:absolute;left:439px;width:67px;background:linear-gradient(0deg,var(--ye),var(--or))}
+#head{position:absolute;left:340px;width:265px;height:150px;overflow:visible}
+#tag{position:absolute;left:0;right:0;top:1150px;text-align:center;font-size:62px;font-weight:300;letter-spacing:.05em;color:var(--off);white-space:pre}
+#tag span{display:inline-block}
+#rule{position:absolute;top:1252px;left:50%;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--ye),var(--or),var(--ye))}
+#band{position:absolute;left:0;width:1080px;height:2700px;background:linear-gradient(0deg,var(--ye) 0%,var(--or) 45%,var(--or) 100%);clip-path:polygon(0 340px,540px 0,1080px 340px,1080px 100%,0 100%)}
+#band2{position:absolute;left:0;width:1080px;height:2700px;background:var(--night);clip-path:polygon(0 340px,540px 0,1080px 340px,1080px 100%,0 100%)}
+#black{position:absolute;inset:0;background:#000;opacity:0}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="glow"></div><div id="grain"></div>
+  <div id="dots"></div>
+  <div id="logo">
+    <div class="ltr" id="L-a" style="left:180px;width:233px;background-position:0 0"></div>
+    <div class="ltr" id="L-l" style="left:439px;width:67px;background-position:-259px 0"></div>
+    <div class="ltr" id="L-t" style="left:529px;width:121px;background-position:-349px 0"></div>
+    <div class="ltr" id="L-o" style="left:659px;width:241px;background-position:-479px 0"></div>
+  </div>
+  <div id="shaft"></div>
+  <svg id="head" viewBox="0 0 265 150"><defs><linearGradient id="hg" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#F7B347"/><stop offset="1" stop-color="#F28D35"/></linearGradient></defs>
+    <path d="M28 128 L132.5 26 L237 128" fill="none" stroke="url(#hg)" stroke-width="58" stroke-linecap="butt" stroke-linejoin="miter"/></svg>
+  <div id="tag">למותגים שמכוונים גבוה</div>
+  <div id="rule"></div>
+  <div id="band"></div><div id="band2"></div>
+  <div id="black"></div>
+</div>
+<script>
+const DUR = 5.0;
+window.STAGE = { w: 1080, h: 1920 };
+const $ = s => document.querySelector(s);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, p) => a + (b - a) * p;
+const E = {
+  out: p => 1 - Math.pow(1 - p, 3), out5: p => 1 - Math.pow(1 - p, 5), in: p => p * p * p,
+  inOut: p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2,
+  back: p => { const c1 = 1.8, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+};
+
+/* rising particles ("aim high"), deterministic */
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const DOTS = Array.from({ length: 22 }, () => ({ x: 60 + rnd() * 960, y0: 1950 + rnd() * 900, sp: 260 + rnd() * 380, r: 4 + rnd() * 9, ph: rnd() * 6 }));
+DOTS.forEach(d => { d.el = document.createElement('div'); d.el.className = 'dot'; $('#dots').appendChild(d.el); });
+
+const tag = $('#tag'); const TAG = [...tag.textContent];
+tag.innerHTML = TAG.map(c => `<span>${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+const tagSpans = [...tag.children];
+
+const L_TOP = 760, L_BOT = 1095;           // the "l" of the wordmark
+const OTHERS = [['#L-a', -1], ['#L-t', 1], ['#L-o', 1.6]];
+
+function renderAt(t) {
+  t = clamp(t, 0, DUR - 1e-4);
+  /* background breathing + glow intro */
+  $('#glow').style.opacity = E.out(prog(t, 0, .6));
+  $('#grain').style.transform = `translate(${(t * 13) % 7}px, ${(t * 29) % 7}px)`;
+  DOTS.forEach(d => {
+    const y = d.y0 - d.sp * t;
+    d.el.style.cssText = `left:${d.x + Math.sin(t * 1.6 + d.ph) * 14}px;top:${y}px;width:${d.r}px;height:${d.r}px;opacity:${.55 * E.out(prog(t, .3, 1.2))}`;
+  });
+
+  /* 1 · the arrow flies up and lands as the "l" */
+  const rise = E.out5(prog(t, .1, .72));
+  const top = lerp(2050, L_TOP, rise);
+  const bot = lerp(2400, L_BOT, E.inOut(prog(t, .62, .98)));
+  const shaft = $('#shaft');
+  shaft.style.top = top + 'px';
+  shaft.style.height = Math.max(0, bot - top) + 'px';
+  const toWhite = E.inOut(prog(t, .92, 1.22));
+  shaft.style.opacity = 1 - toWhite;
+  const head = $('#head');
+  const hFly = E.in(prog(t, .96, 1.32));
+  head.style.top = (top - 128 + 6 - hFly * 260) + 'px';
+  head.style.opacity = (t < .1 ? 0 : 1) * (1 - hFly);
+  head.style.transform = `scale(${1 - hFly * .35})`;
+  $('#L-l').style.opacity = toWhite;
+
+  /* 2 · the other letters pop in around it */
+  OTHERS.forEach(([id, dir], i) => {
+    const p = prog(t, 1.0 + i * .08, 1.48 + i * .08);
+    const el = $(id);
+    el.style.opacity = clamp(p * 2.5);
+    el.style.transform = `translate(${(1 - E.out(p)) * -40 * dir}px, ${(1 - E.back(p)) * 60}px) scale(${lerp(.55, 1, E.back(p))})`;
+  });
+
+  /* 3 · tagline types in (right→left), gradient rule draws out from the centre */
+  tagSpans.forEach((sp, i) => {
+    const a = 1.62 + i * .055, p = prog(t, a, a + .32);
+    sp.style.opacity = E.out(p);
+    sp.style.transform = `translateY(${(1 - E.out(p)) * 22}px)`;
+    sp.style.filter = p < 1 ? `blur(${(1 - p) * 7}px)` : '';
+  });
+  const rw = E.inOut(prog(t, 1.75, 2.6)) * 460;
+  $('#rule').style.width = rw + 'px';
+  $('#rule').style.marginLeft = (-rw / 2) + 'px';
+  $('#rule').style.opacity = rw > 1 ? 1 : 0;
+
+  /* hold: slow push-in on the whole lockup */
+  const push = 1 + .025 * E.inOut(prog(t, 1.5, 3.9));
+  ['#logo', '#tag', '#rule'].forEach(s => { $(s).style.transformOrigin = '540px 930px'; });
+  $('#logo').style.transform = `scale(${push})`;
+
+  /* 4 · exit: a gradient chevron sweeps up, a night-navy chevron follows, fade to black */
+  const sweep = E.inOut(prog(t, 3.9, 4.6));
+  $('#band').style.top = lerp(1960, -2760, sweep) + 'px';
+  const sweep2 = E.inOut(prog(t, 4.02, 4.72));
+  $('#band2').style.top = lerp(2300, -800, sweep2) + 'px';
+  $('#black').style.opacity = E.inOut(prog(t, 4.72, 5.0));
+}
+window.renderAt = renderAt; window.DUR = DUR;
+window.ready = Promise.all([document.fonts.ready, new Promise(r => { const i = new Image(); i.onload = r; i.src = '../../brand/logos/asset-1@3x.png'; })]).then(() => { renderAt(0); return true; });
+if (!new URLSearchParams(location.search).has('render')) {
+  const t0 = performance.now();
+  const loop = now => { renderAt(((now - t0) / 1000) % DUR); requestAnimationFrame(loop); };
+  window.ready.then(() => requestAnimationFrame(loop));
+}
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@ A ~73-second animated explainer (1920×1080, 30 fps) for clients. It covers what
 | `render.js` | Renders the HTML to MP4 frame by frame with headless Chromium and ffmpeg |
 | `out/alto-ad-reel-he.mp4` | 18.5 s Reel ad for Facebook/Instagram (9:16, content kept inside the 4:5 crop). Copy and lead form: `ad-copy.md` |
 | `alto-ad.html` | The ad's animation source (`?guides=1` shows the 4:5 crop and the text-safe area) |
+| `out/alto-endcard.mp4` | 5 s branded end card (1080×1920) to append to reels: arrow lands as the "l", tagline types in, gradient chevron wipes out. Source `outro/outro.html`, sound `outro/outro_sfx.py` |
 | `music.py` | Synthesizes the royalty-free background track: 120 BPM upbeat electronic, with whooshes and impacts timed to the scene cuts |
 
 ## Storyboard
@@ -57,6 +58,13 @@ To use your own track instead, put its file in place of `out/music.wav` in that 
 python3 music.py --dur 18.5 --bpm 128 --drop 0 --build 0 --outro 17.6 \
   --cuts 2.6,5.2,9,12.4,13.2,14,14.8 --arp-start 0 --out out/music-ad.wav
 node render.js --page alto-ad.html --name alto-ad-reel --lang he --audio out/music-ad.wav
+```
+
+### Re-rendering the end card
+
+```bash
+python3 outro/outro_sfx.py out/outro-sfx.wav
+node render.js --page outro/outro.html --name alto-endcard --fps 30 --audio out/outro-sfx.wav
 ```
 
 Pass `--chrome /path/to/chrome` if Playwright's bundled browser isn't installed.
