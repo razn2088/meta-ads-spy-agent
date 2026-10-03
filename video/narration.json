@@ -1,0 +1,32 @@
+{
+  "_note": "Voice-over lines. 'at' is the second in the video where the line starts; each line must finish before the next one starts. Clips go in out/vo/<lang>/<id>.wav (see voiceover.py).",
+  "voice": "Gemini TTS 'Kore' (firm, confident female), via Magnific",
+  "lines": [
+    {"id": "s1",  "at": 0.7,  "en": "Alto. Competitor intelligence, made simple.",
+                              "he": "אלטו. מודיעין מתחרים, בפשטות."},
+    {"id": "s2",  "at": 4.9,  "en": "Your competitors launch new ads every single week. Are you keeping up?",
+                              "he": "המתחרים שלכם מעלים מודעות חדשות כל שבוע. אתם מספיקים לעקוב?"},
+    {"id": "s3",  "at": 11.5, "en": "Meet the Alto Dashboard. It tracks your competitors' Meta ads, spots every change, and sends the insights to WhatsApp.",
+                              "he": "הכירו את הדשבורד של אלטו. הוא עוקב אחרי מודעות המתחרים במטא, מזהה כל שינוי, ושולח את התובנות לוואטסאפ."},
+    {"id": "s4a", "at": 18.3, "en": "It takes three simple steps.",
+                              "he": "זה עובד בשלושה צעדים פשוטים."},
+    {"id": "s4b", "at": 20.5, "en": "Add your competitors.",
+                              "he": "מוסיפים את המתחרים."},
+    {"id": "s4c", "at": 22.1, "en": "Alto scans their ads and catches every change.",
+                              "he": "אלטו סורק את המודעות שלהם ותופס כל שינוי."},
+    {"id": "s4d", "at": 25.4, "en": "And a short AI report lands in your WhatsApp group.",
+                              "he": "ודו״ח חכם וקצר נוחת בקבוצת הוואטסאפ שלכם."},
+    {"id": "s5a", "at": 29.8, "en": "Inside the dashboard, adding a competitor takes seconds.",
+                              "he": "בתוך הדשבורד, הוספת מתחרה לוקחת שניות."},
+    {"id": "s5b", "at": 35.6, "en": "Click Run, and the agent scans every competitor for you.",
+                              "he": "לוחצים על הפעלה, והסוכן סורק את כל המתחרים בשבילכם."},
+    {"id": "s5c", "at": 40.9, "en": "Every scan is saved to your history, so nothing slips by.",
+                              "he": "כל סריקה נשמרת בהיסטוריה, כך ששום דבר לא מתפספס."},
+    {"id": "s6",  "at": 48.3, "en": "Your report shows what changed this week, the strategy behind it, your next moves, and the ads worth a closer look.",
+                              "he": "הדו״ח מראה מה השתנה השבוע, מה האסטרטגיה שלהם, מה הצעדים הבאים שלכם, ואילו מודעות שווה לבדוק."},
+    {"id": "s7",  "at": 59.5, "en": "Save hours. Never miss a move. And always know your next step.",
+                              "he": "חוסכים שעות. לא מפספסים אף מהלך. ותמיד יודעים מה הצעד הבא."},
+    {"id": "s8",  "at": 67.5, "en": "Alto. See every move, and make the next one.",
+                              "he": "אלטו. רואים כל מהלך, ועושים את הבא."}
+  ]
+}
