@@ -99,6 +99,16 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 .wa-m .tm{display:block;text-align:left;font-size:16px;color:#667781;margin-top:2px}
 
 /* checklist / monitor / rules / notifications */
+.vals{display:flex;gap:18px;padding:26px 28px 6px}
+.val{flex:1;background:#F7F7F7;border-radius:22px;padding:18px 22px}
+.val small{font-size:22px;color:var(--muted);font-weight:600}
+.val b{display:block;font-size:62px;font-weight:900;line-height:1.1;direction:ltr;text-align:right;color:var(--ink)}
+.val em{font-style:normal;font-size:22px;font-weight:800;color:var(--ok);direction:ltr;display:block;text-align:right}
+.bars{display:flex;align-items:flex-end;gap:16px;height:210px;padding:10px 28px 24px;direction:ltr}
+.bar{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px}
+.bar i{display:block;width:100%;border-radius:12px 12px 4px 4px;background:#E4E6EF;height:0}
+.bar.now i{background:var(--grad)}
+.bar span{font-size:19px;color:var(--muted);font-weight:700}
 .list{padding:18px 30px 28px}
 .row{display:flex;align-items:center;gap:18px;padding:18px 6px;font-size:36px;font-weight:800;border-bottom:1.5px solid #EDF1F8}
 .row:last-child{border:0}
@@ -120,11 +130,10 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 
 /* outro */
 .outro{left:60px;right:60px;top:1240px;display:flex;flex-direction:column;align-items:center;text-align:center}
-.lock{display:flex;align-items:flex-end;justify-content:center;gap:34px;direction:ltr}
-.lock img{width:520px;display:block}
-.lock svg.arrow{width:110px;height:300px;flex:none;overflow:visible}
-.outro h2{font-size:64px;font-weight:900;margin-top:30px}
-.outro h2 b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lock{display:flex;justify-content:center}
+.lock img{width:560px;display:block}
+.tagline{margin-top:30px;font-size:50px;font-weight:300;letter-spacing:.06em;color:#F7F7F7;height:70px;white-space:pre}
+.tagline span{display:inline-block}
 .ints{display:flex;gap:14px;margin-top:28px;flex-wrap:wrap;justify-content:center}
 .ints span{background:rgba(247,247,247,.1);border:2px solid rgba(242,141,53,.55);border-radius:999px;padding:10px 22px;font-size:26px;font-weight:800;direction:ltr}
 </style>
@@ -181,11 +190,16 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
   <div class="inbar"><div class="in" id="chatIn2">שאלו כל דבר על השיווק שלכם…</div><div class="send"><svg viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6"/></svg></div></div>
 </div>
 
-<!-- ── S6 · not a gimmick, real value (50.8–62.1) ── -->
-<div class="el card" data-in="59.22" data-out="62.1" data-fx="up" style="top:1260px">
-  <div class="list">
-    <div class="row el" data-in="59.64" data-out="62.1" data-fx="pop" style="position:relative"><div class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>ערך ללקוחות שלנו</div>
-    <div class="row el" data-in="61.3" data-out="62.1" data-fx="pop" style="position:relative"><div class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>ערך לנו כסוכנות</div>
+<!-- ── S6 · real value = client results (58.3–62.1) ── -->
+<div class="el card" id="valueCard" data-in="58.9" data-out="62.1" data-fx="up" style="top:1240px">
+  <div class="hd"><div class="logo"><img src="assets/alto-logo-06.png" alt="alto"></div><div><b>תוצאות ללקוח</b><small>החודש · מול החודש שעבר</small></div><div class="live"><i></i>LIVE</div></div>
+  <div class="vals">
+    <div class="val"><small>הכנסות מהקמפיינים</small><b data-count="486000" data-pre="₪" data-sep="1">₪0</b><em>▲ 32%</em></div>
+    <div class="val"><small>החזר על ההשקעה (ROAS)</small><b data-count="5.2" data-dec="1" data-post="x">0x</b><em>▲ 1.4</em></div>
+  </div>
+  <div class="bars">
+    <div class="bar" style="--h:.34"><i></i><span>מאי</span></div><div class="bar" style="--h:.42"><i></i><span>יוני</span></div><div class="bar" style="--h:.5"><i></i><span>יולי</span></div>
+    <div class="bar" style="--h:.63"><i></i><span>אוג׳</span></div><div class="bar" style="--h:.76"><i></i><span>ספט׳</span></div><div class="bar now" style="--h:1"><i></i><span>אוק׳</span></div>
   </div>
 </div>
 
@@ -222,9 +236,9 @@ body.preview{background:#555 linear-gradient(180deg,#6b7280,#374151)}
 
 <!-- ── S9 · outro (82.6–87.16) ── -->
 <div class="el outro" data-in="83.4" data-out="87.2" data-fx="up">
-  <div class="lock"><svg class="arrow" viewBox="0 0 110 300"><defs><linearGradient id="ga" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#FAED64"/><stop offset="1" stop-color="#F28D35"/></linearGradient></defs><path id="arrowPath" d="M55 296 L55 14 M10 62 L55 14 L100 62" fill="none" stroke="url(#ga)" stroke-width="22" stroke-linecap="butt" stroke-linejoin="miter"/></svg><img src="assets/alto-logo-17.png" alt="alto – למותגים שמכוונים גבוה"></div>
-  <h2 class="el" data-in="84.82" data-out="87.2" data-fx="pop" style="position:relative">הכול כדי <b>לייצר ערך.</b></h2>
-  <div class="ints"><span>Meta</span><span>Google</span><span>TikTok</span><span>WhatsApp</span><span>CRM</span></div>
+  <div class="lock"><img src="assets/alto-logo-06.png" alt="alto"></div>
+  <div class="tagline" id="tagline">למותגים שמכוונים גבוה</div>
+  <div class="ints" id="ints"><span>Meta</span><span>Google</span><span>TikTok</span><span>WhatsApp</span><span>CRM</span></div>
 </div>
 </div>
 
@@ -380,12 +394,43 @@ function s7(t) {
 /* notifications stack: the second one slides in under the first */
 function s8() { $('#n1').style.top = '1230px'; $('#n2').style.top = '1450px'; }
 
-const ARROW_LEN = 400;
-$('#arrowPath').style.strokeDasharray = ARROW_LEN;
-function s9(t) { $('#arrowPath').style.strokeDashoffset = ARROW_LEN * (1 - E.inOut(prog(t, 83.7, 84.6))); }
+/* outro: tagline types in letter by letter, then the platform chips */
+const tag = $('#tagline');
+const TAG = [...tag.textContent];
+tag.innerHTML = TAG.map(c => `<span>${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+const tagSpans = [...tag.children];
+const chips = [...document.querySelectorAll('#ints span')];
+function s9(t) {
+  const a = 84.1, step = 0.065;
+  tagSpans.forEach((sp, i) => {
+    const p = prog(t, a + i * step, a + i * step + .35);
+    sp.style.opacity = E.out(p);
+    sp.style.transform = `translateY(${(1 - E.out(p)) * 18}px)`;
+    sp.style.filter = p < 1 ? `blur(${(1 - p) * 6}px)` : '';
+  });
+  const c0 = a + TAG.length * step + .15;
+  chips.forEach((c, i) => {
+    const p = prog(t, c0 + i * .09, c0 + i * .09 + .4);
+    c.style.display = 'inline-block';
+    c.style.opacity = clamp(p * 2);
+    c.style.transform = `scale(${lerp(.6, 1, E.back(p))})`;
+  });
+}
+/* client-results card: counters and bars */
+function s6(t) {
+  document.querySelectorAll('#valueCard [data-count]').forEach(b => {
+    const p = E.out(prog(t, 59.3, 61.4)), v = +b.dataset.count * p;
+    const num = b.dataset.dec ? v.toFixed(1) : Math.round(v).toLocaleString('en-US');
+    b.textContent = (b.dataset.pre || '') + num + (b.dataset.post || '');
+  });
+  document.querySelectorAll('#valueCard .bar i').forEach((bar, i) => {
+    const p = E.out(prog(t, 59.4 + i * .18, 60.2 + i * .18));
+    bar.style.height = (p * parseFloat(getComputedStyle(bar.parentElement).getPropertyValue('--h')) * 150) + 'px';
+  });
+}
 function renderAt(t) {
   t = clamp(t, 0, DUR - 1e-3);
-  anim(t); s9(t); s0(t); s1(t); chat1(t); chat2(t); s4(t); s7(t); s8(t);
+  anim(t); s9(t); s6(t); s0(t); s1(t); chat1(t); chat2(t); s4(t); s7(t); s8(t);
   typeInto($('#chatIn'), 'שאלו כל דבר על השיווק שלכם', t, 16.3, 18.4, 'שאלו כל דבר על השיווק שלכם…');
   typeInto($('#chatIn2'), 'מה כדאי לשפר השבוע?', t, 46.6, 46.95, 'שאלו כל דבר על השיווק שלכם…');
   shade();
@@ -397,7 +442,7 @@ window.SFX = [
   ...els.filter(e => ['pop', 'drop'].includes(e.fx) && e.n.classList.contains('cap')).map(e => [e.a, 'tick']),
   ...els.filter(e => ['up', 'rise', 'fade'].includes(e.fx)).map(e => [e.a, 'whoosh']),
   ...SRC.map(s => [s[1], 'pop']), [19.14, 'send'], [22.02, 'send'], [23.64, 'send'], [25.02, 'send'], [27.3, 'pop'], [47.0, 'send'], [48.1, 'pop'],
-  [38.3, 'send'], [40.4, 'pop'], [78.72, 'alert'], [80.4, 'alert'], [84.82, 'hit'],
+  [38.3, 'send'], [40.4, 'pop'], [78.72, 'alert'], [80.4, 'alert'], [83.4, 'hit'],
 ];
 window.ready = document.fonts.ready.then(() => { renderAt(0); return true; });
 if (!Q.has('render')) {
